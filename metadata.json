@@ -1,0 +1,5 @@
+{
+  "name": "AWS Quiz Challenge",
+  "description": "An interactive quiz application to test your knowledge of AWS services. Features AI-powered question generation using the Gemini API.",
+  "requestFramePermissions": []
+}
