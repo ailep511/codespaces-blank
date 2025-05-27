@@ -30,7 +30,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onEdit, onDelete
           className={`p-4 rounded-lg shadow-md cursor-pointer transition-all
                       ${question.id === currentQuestionId 
                         ? 'bg-sky-100 dark:bg-sky-700/40 border-sky-500 dark:border-sky-500 border-2' 
-                        : 'bg-white dark:bg-slate-700/30 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+                        : 'bg-white dark:bg-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-600'}`}
         >
           <div className="flex justify-between items-start">
             <div className="flex-1 min-w-0">
