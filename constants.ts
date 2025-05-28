@@ -226,4 +226,4 @@ export const INITIAL_QUESTIONS: QuizQuestionData[] = [
   }
 ];
 
-export const GEMINI_API_MODEL_TEXT = 'gemini-2.5-flash-preview-05-20';
+export const GEMINI_API_MODEL_TEXT = 'gemini-2.5-pro-preview-05-06';
