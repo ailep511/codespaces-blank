@@ -10,7 +10,7 @@ import QuestionList from "./components/QuestionList"
 import QuestionForm from "./components/QuestionForm"
 import Modal from "./components/Modal"
 import { PlusIcon, SunIcon, MoonIcon } from "./components/icons"
-import questionsData from "./questions.json"
+import { getRandomQuestionFile } from "./questions"
 
 type QuizState = "not_started" | "idle" | "active" | "completed"
 type Theme = "light" | "dark"
@@ -51,12 +51,12 @@ const App: React.FC = () => {
       const loadInitialData = () => {
         setIsFetchingInitialJson(true)
         try {
-          console.log("[v0] Loading questions from questions.json and selecting 10 random questions...")
-          const rawQuestionsFromJson = questionsData
+          const selectedFile = getRandomQuestionFile()
+          console.log("[v0] Randomly selected a question file with", selectedFile.length, "questions")
 
           if (
-            Array.isArray(rawQuestionsFromJson) &&
-            rawQuestionsFromJson.every(
+            Array.isArray(selectedFile) &&
+            selectedFile.every(
               (q) =>
                 q &&
                 typeof q.question === "string" &&
@@ -67,11 +67,7 @@ const App: React.FC = () => {
                 typeof q.explanation === "string",
             )
           ) {
-            // Shuffle and select only 10 questions
-            const shuffled = [...rawQuestionsFromJson].sort(() => Math.random() - 0.5)
-            const selectedQuestions = shuffled.slice(0, 10)
-
-            const formattedQuestions: QuizQuestionData[] = selectedQuestions.map((q: any, index: number) => ({
+            const formattedQuestions: QuizQuestionData[] = selectedFile.map((q: any, index: number) => ({
               id: `file-q-${Date.now()}-${index}`,
               question: q.question,
               options: q.options,
@@ -79,14 +75,12 @@ const App: React.FC = () => {
               explanation: q.explanation,
             }))
             setQuestions(formattedQuestions)
-            console.log(
-              `[v0] Successfully loaded and selected ${formattedQuestions.length} random questions from questions.json.`,
-            )
+            console.log(`[v0] Successfully loaded ${formattedQuestions.length} questions`)
           } else {
-            console.error("[v0] Invalid data structure in questions.json. Initial questions will be empty.")
+            console.error("[v0] Invalid data structure in selected questions file")
           }
         } catch (error) {
-          console.error("[v0] Failed to load or parse questions.json:", error)
+          console.error("[v0] Failed to load questions:", error)
         } finally {
           setIsFetchingInitialJson(false)
           setInitialJsonLoadAttempted(true)
@@ -107,10 +101,7 @@ const App: React.FC = () => {
   }, [currentQuestionIndex, quizState])
 
   useEffect(() => {
-    // Ensure quizState is 'not_started' if questions become empty after being loaded.
-    // Also, adjust currentQuestionIndex if it becomes out of bounds.
     if (initialJsonLoadAttempted || questions.length > 0) {
-      // Only adjust after initial load attempt or if questions always existed
       if (quizState !== "not_started" && questions.length === 0) {
         setQuizState("not_started")
         setCurrentQuestionIndex(0)
@@ -131,25 +122,20 @@ const App: React.FC = () => {
   const startQuiz = useCallback(() => {
     if (questions.length === 0) {
       if (quizState !== "not_started") {
-        // Avoid alert if already in not_started and trying to start
         alert("No questions available to start the quiz. Please add some questions first.")
       }
       return
     }
 
     if (quizState === "not_started" || quizState === "completed") {
-      setCurrentQuestionIndex(0) // Always start from the first question
+      setCurrentQuestionIndex(0)
     }
-    // If quizState is 'idle', it will start from currentQuestionIndex
 
     setScore(0)
     setSelectedOptionKey(null)
     setIsAnswerSubmitted(false)
     setQuizState("active")
-  }, [
-    questions.length,
-    quizState /* currentQuestionIndex - removed to ensure startQuiz from welcome is always from 0 */,
-  ])
+  }, [questions.length, quizState])
 
   const handleOptionSelect = useCallback(
     (optionKey: string) => {
@@ -183,7 +169,7 @@ const App: React.FC = () => {
         total: questions.length,
         percentage,
       }
-      setQuizResults((prev) => [newResult, ...prev].slice(0, 5)) // Keep only last 5 results
+      setQuizResults((prev) => [newResult, ...prev].slice(0, 5))
       setQuizState("completed")
     }
   }, [quizState, currentQuestionIndex, questions.length, currentQuestionData, score, selectedOptionKey, setQuizResults])

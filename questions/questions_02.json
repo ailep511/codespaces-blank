@@ -1,0 +1,112 @@
+[
+  {
+    "question": "A solutions architect needs to design a highly available and fault-tolerant architecture for a stateless web application. The application will be deployed on Amazon EC2 instances. The design must ensure that the application can withstand the failure of an entire Availability Zone.\nWhich design pattern should the architect implement?",
+    "options": {
+      "A": "Deploy all EC2 instances in a single Availability Zone with multiple instance types.",
+      "B": "Deploy EC2 instances across multiple AWS Regions and use Amazon Route 53 for failover.",
+      "C": "Deploy EC2 instances in an Auto Scaling group across multiple Availability Zones within a single AWS Region, behind an Application Load Balancer.",
+      "D": "Deploy EC2 instances in a single Availability Zone and use Amazon EBS snapshots for quick recovery."
+    },
+    "correctAnswer": "C",
+    "explanation": "To withstand an Availability Zone failure, the application must be deployed **across multiple AZs within a region**. An **Auto Scaling group** ensures the desired number of instances are running, and an Application Load Balancer distributes traffic across instances in these multiple AZs. This setup provides high availability and fault tolerance against an AZ outage. Deploying in a single AZ (A, D) does not protect against AZ failure. Multi-Region deployment (B) provides disaster recovery but is more complex and costly than a multi-AZ setup for high availability within a region."
+  },
+  {
+    "question": "A company has a large amount of historical data (petabytes) that is rarely accessed but must be retained for 10 years for compliance reasons. They are looking for the most cost-effective Amazon S3 storage class for this data. Retrieval times of several hours are acceptable.\nWhich S3 storage class should be used?",
+    "options": {
+      "A": "S3 Standard",
+      "B": "S3 Intelligent-Tiering",
+      "C": "S3 Glacier Flexible Retrieval",
+      "D": "S3 Glacier Deep Archive"
+    },
+    "correctAnswer": "D",
+    "explanation": "**S3 Glacier Deep Archive** is Amazon S3's lowest-cost storage class and supports long-term retention and digital preservation for data that may be accessed once or twice in a year. It is designed for customers that retain data sets for 7-10 years or more. Retrieval times are typically within 12 hours. S3 Standard (A) is for frequently accessed data. S3 Intelligent-Tiering (B) automatically moves data to the most cost-effective access tier but might not be the absolute lowest cost for rarely accessed archival data. S3 Glacier Flexible Retrieval (C) is also for archive but S3 Glacier Deep Archive offers even lower storage costs for data that can tolerate longer retrieval times."
+  },
+  {
+    "question": "A company wants to quickly deploy a simple web application and its database without managing the underlying infrastructure like operating systems or servers. They prefer a solution where they can just upload their code, and AWS handles the deployment, scaling, and patching.\nWhich AWS service is designed for this type of deployment?",
+    "options": {
+      "A": "Amazon EC2",
+      "B": "AWS Elastic Beanstalk",
+      "C": "Amazon ECS",
+      "D": "AWS Lambda with Amazon API Gateway"
+    },
+    "correctAnswer": "B",
+    "explanation": "**AWS Elastic Beanstalk** is an easy-to-use service for deploying and scaling web applications and services developed with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker on familiar servers such as Apache, Nginx, Passenger, and IIS. You can simply upload your code, and Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring. EC2 (A) requires infrastructure management. ECS (C) is for container orchestration. Lambda with API Gateway (D) is for serverless functions, which might fit part of the need but Elastic Beanstalk is more holistic for web application and database deployment in a PaaS model."
+  },
+  {
+    "question": "An organization needs to audit all API calls made to their AWS resources for security analysis and compliance. They need to know who made an API call, from what IP address, when it was made, and what resources were affected. This information must be logged and retained for several years.\nWhich AWS service provides this capability?",
+    "options": {
+      "A": "Amazon CloudWatch Logs",
+      "B": "AWS Config",
+      "C": "AWS CloudTrail",
+      "D": "Amazon Inspector"
+    },
+    "correctAnswer": "C",
+    "explanation": "**AWS CloudTrail** is a service that enables governance, compliance, operational auditing, and risk auditing of your AWS account. With CloudTrail, you can log, continuously monitor, and retain account activity related to actions across your AWS infrastructure. It records API calls, including the caller identity, time, source IP, request parameters, and response elements. CloudWatch Logs (A) is for application and system logs. AWS Config (B) tracks resource configuration changes. Amazon Inspector (D) is a vulnerability assessment service."
+  },
+  {
+    "question": "A company is running a stateful application on an Amazon EC2 instance. The application requires a persistent block storage volume that can be detached from one EC2 instance and reattached to another in the same Availability Zone if the original instance fails. The data must be retained even if the EC2 instance is terminated.\nWhich type of storage should be used?",
+    "options": {
+      "A": "Amazon S3",
+      "B": "Amazon EBS Volume",
+      "C": "EC2 Instance Store",
+      "D": "Amazon EFS"
+    },
+    "correctAnswer": "B",
+    "explanation": "**Amazon EBS (Elastic Block Store)** volumes provide persistent block-level storage for use with EC2 instances. EBS volumes persist independently from the running life of an EC2 instance and can be detached and reattached to other instances in the same Availability Zone. S3 (A) is object storage, not block storage for OS/applications. EC2 Instance Store (C) is ephemeral and data is lost when the instance is stopped or terminated. EFS (D) is file storage that can be accessed by multiple instances, but EBS is the standard block storage for a single instance needing persistence."
+  },
+  {
+    "question": "A solutions architect needs to provide distinct network segments within a single Amazon VPC for different environments like development, testing, and production. Each segment must have its own IP address range and routing configuration, and traffic between these segments should be controllable via network ACLs and security groups.\nHow can this be achieved within the VPC?",
+    "options": {
+      "A": "Create multiple VPCs and use VPC peering.",
+      "B": "Create multiple subnets, each dedicated to an environment.",
+      "C": "Use multiple Elastic IP addresses for each environment.",
+      "D": "Configure different AWS Direct Connect connections for each environment."
+    },
+    "correctAnswer": "B",
+    "explanation": "Subnets are segments of a VPC's IP address range where you can place groups of isolated resources. By creating different subnets for development, testing, and production, you can assign unique CIDR blocks to each and control traffic flow between them using route tables, network ACLs, and security groups. Multiple VPCs with peering (A) is a heavier solution for segmentation than subnets within a single VPC. Elastic IPs (C) are for static public IPs. Direct Connect (D) is for on-premises connectivity."
+  },
+  {
+    "question": "A company wants to implement a caching layer for its relational database to reduce read load and improve application performance. The cache should support common caching strategies like lazy loading and write-through, and be highly available.\nWhich AWS service is most suitable for this requirement?",
+    "options": {
+      "A": "Amazon S3",
+      "B": "Amazon DynamoDB Accelerator (DAX)",
+      "C": "Amazon ElastiCache (using Redis or Memcached)",
+      "D": "Amazon CloudFront"
+    },
+    "correctAnswer": "C",
+    "explanation": "**Amazon ElastiCache** is a web service that makes it easy to deploy, operate, and scale an in-memory cache in the cloud. It supports two open-source in-memory caching engines: Redis and Memcached, which are suitable for implementing caching strategies like lazy loading and write-through for relational databases. S3 (A) is object storage. DAX (B) is a cache specifically for DynamoDB. CloudFront (D) is a CDN for caching content closer to users, primarily for web assets, not typically as a database cache layer."
+  },
+  {
+    "question": "A global company wants to distribute its static web content (images, videos, CSS, JavaScript) to users around the world with low latency. They also want to improve the availability of this content.\nWhich AWS service should they use?",
+    "options": {
+      "A": "Amazon S3 Transfer Acceleration",
+      "B": "AWS Global Accelerator",
+      "C": "Amazon CloudFront",
+      "D": "Application Load Balancer with instances in multiple regions"
+    },
+    "correctAnswer": "C",
+    "explanation": "**Amazon CloudFront** is a content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency and high transfer speeds, all within a developer-friendly environment. It caches content at Edge Locations closer to users, reducing latency. S3 Transfer Acceleration (A) speeds up uploads to S3. AWS Global Accelerator (B) improves availability and performance of global applications using AWS global network, but CloudFront is specifically for content delivery. ALB with multi-region instances (D) is for dynamic application traffic, not primarily static content distribution."
+  },
+  {
+    "question": "A company needs to ensure that IAM users can only perform actions that are explicitly allowed by their IAM policies and that they adhere to the principle of least privilege. They want to set a permissions boundary for certain IAM roles to restrict the maximum permissions these roles can ever have, regardless of their identity-based policies.\nWhat AWS IAM feature should be used to achieve this?",
+    "options": {
+      "A": "Service Control Policies (SCPs)",
+      "B": "IAM Groups",
+      "C": "IAM Permissions Boundaries",
+      "D": "Resource-based policies"
+    },
+    "correctAnswer": "C",
+    "explanation": "**IAM Permissions Boundaries** are an advanced feature for using managed policies to set the maximum permissions that an identity-based policy can grant to an IAM entity (user or role). A permissions boundary does not grant permissions on its own; it only sets the limit. SCPs (A) are used in AWS Organizations to manage permissions across accounts. IAM Groups (B) are for organizing users. Resource-based policies (D) are attached to resources."
+  },
+  {
+    "question": "A company needs to run a batch processing job that can be interrupted. The job is not time-critical and can run whenever compute capacity is available at the lowest possible cost. The primary goal is cost optimization.\nWhich EC2 purchasing option is the MOST cost-effective for this scenario?",
+    "options": {
+      "A": "On-Demand Instances",
+      "B": "Reserved Instances",
+      "C": "Spot Instances",
+      "D": "Dedicated Hosts"
+    },
+    "correctAnswer": "C",
+    "explanation": "**Spot Instances** offer the largest discounts on EC2 compute capacity (up to 90% off On-Demand prices) by allowing customers to bid on unused EC2 capacity. They are ideal for fault-tolerant, flexible workloads that can be interrupted, such as batch processing jobs, big data analysis, and test/dev environments. On-Demand (A) is flexible but more expensive. Reserved Instances (B) provide savings for long-term, predictable workloads. Dedicated Hosts (D) are for compliance or licensing needs requiring physical server isolation and are the most expensive."
+  }
+]
