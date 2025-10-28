@@ -380,8 +380,10 @@ const App: React.FC = () => {
         </button>
       </header>
 
-      <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
+      <main
+        className={`max-w-6xl mx-auto ${quizState === "idle" || quizState === "completed" ? "grid grid-cols-1 lg:grid-cols-3 gap-8" : ""}`}
+      >
+        <div className={quizState === "idle" || quizState === "completed" ? "lg:col-span-2 space-y-6" : "space-y-6"}>
           {quizState === "not_started" ? (
             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg text-center">
               <h2 className="text-3xl font-semibold text-sky-600 dark:text-sky-400 mb-4">Welcome to the Quiz!</h2>
@@ -496,30 +498,32 @@ const App: React.FC = () => {
           )}
         </div>
 
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-300">Quiz Questions</h2>
-              <button
-                onClick={openAddModal}
-                className="flex items-center px-3 py-2 text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 rounded-md shadow-sm transition"
-              >
-                <PlusIcon className="w-4 h-4 mr-1.5" />
-                Add Question
-              </button>
+        {(quizState === "idle" || quizState === "completed") && (
+          <div className="lg:col-span-1 space-y-6">
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-300">Quiz Questions</h2>
+                <button
+                  onClick={openAddModal}
+                  className="flex items-center px-3 py-2 text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 rounded-md shadow-sm transition"
+                >
+                  <PlusIcon className="w-4 h-4 mr-1.5" />
+                  Add Question
+                </button>
+              </div>
+              <QuestionList
+                questions={questions}
+                onEdit={openEditModal}
+                onDelete={handleDeleteQuestion}
+                currentQuestionId={
+                  quizState !== "not_started" && quizState !== "completed" ? currentQuestionData?.id : undefined
+                }
+                onSelectQuestion={handleSelectQuestionFromList}
+                isLoading={isFetchingInitialJson && !initialJsonLoadAttempted}
+              />
             </div>
-            <QuestionList
-              questions={questions}
-              onEdit={openEditModal}
-              onDelete={handleDeleteQuestion}
-              currentQuestionId={
-                quizState !== "not_started" && quizState !== "completed" ? currentQuestionData?.id : undefined
-              }
-              onSelectQuestion={handleSelectQuestionFromList}
-              isLoading={isFetchingInitialJson && !initialJsonLoadAttempted}
-            />
           </div>
-        </div>
+        )}
       </main>
 
       <Modal

@@ -19,6 +19,7 @@
     "path": "latest",
     "react": "^19.2.0",
     "react-dom": "latest",
+    "react-markdown": "latest",
     "sass": "latest",
     "sass-embedded": "latest",
     "stylus": "latest",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
