@@ -10,7 +10,7 @@ import QuestionList from "./components/QuestionList"
 import QuestionForm from "./components/QuestionForm"
 import Modal from "./components/Modal"
 import { PlusIcon, SunIcon, MoonIcon } from "./components/icons"
-import { getRandomQuestionFile } from "./questions"
+import { getRandomQuestionFile } from "./questions/index"
 
 type QuizState = "not_started" | "idle" | "active" | "completed"
 type Theme = "light" | "dark"
