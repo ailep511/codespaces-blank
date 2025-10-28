@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { QuizQuestionData } from '../types';
 import { PencilIcon, TrashIcon } from './icons';
