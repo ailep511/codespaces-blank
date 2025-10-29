@@ -398,6 +398,14 @@ const App: React.FC = () => {
     setQuizState("idle")
   }
 
+  const handleGoToHomepage = useCallback(() => {
+    setQuizState("not_started")
+    setCurrentQuestionIndex(0)
+    setSelectedOptionKeys([])
+    setIsAnswerSubmitted(false)
+    setScore(0)
+  }, [])
+
   const renderNotStartedContent = () => {
     if (isFetchingInitialJson) {
       return <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">Loading initial questions...</p>
@@ -486,17 +494,42 @@ const App: React.FC = () => {
             </div>
           ) : quizState === "completed" ? (
             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg text-center">
-              <h2 className="text-3xl font-semibold text-sky-600 dark:text-sky-400 mb-4">Quiz Completed!</h2>
-              <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
-                Your score: <span className="font-bold text-emerald-500 dark:text-emerald-400">{score}</span> out of{" "}
-                {questions.length}
-              </p>
-              <button
-                onClick={handleNewQuiz}
-                className="px-6 py-3 text-lg font-medium text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 rounded-md shadow-sm transition"
-              >
-                New Quiz
-              </button>
+              <h2 className="text-3xl font-semibold text-sky-600 dark:text-sky-400 mb-6">Quiz Completed!</h2>
+
+              <div className="mb-8 space-y-4">
+                <div className="text-5xl font-bold text-sky-600 dark:text-sky-400">
+                  {Math.round((score / questions.length) * 100)}%
+                </div>
+                <p className="text-xl text-slate-700 dark:text-slate-300">
+                  You scored <span className="font-bold text-emerald-500 dark:text-emerald-400">{score}</span> out of{" "}
+                  <span className="font-bold">{questions.length}</span>
+                </p>
+
+                <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <p className="text-lg text-slate-600 dark:text-slate-400">
+                    {Math.round((score / questions.length) * 100) >= 80
+                      ? "Excellent work! 🎉"
+                      : Math.round((score / questions.length) * 100) >= 60
+                        ? "Good job! Keep practicing! 👍"
+                        : "Keep studying and try again! 💪"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button
+                  onClick={handleGoToHomepage}
+                  className="w-full sm:w-auto px-6 py-3 text-lg font-medium text-slate-700 dark:text-slate-200 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-md shadow-sm transition"
+                >
+                  Go to Homepage
+                </button>
+                <button
+                  onClick={handleNewQuiz}
+                  className="w-full sm:w-auto px-6 py-3 text-lg font-medium text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 rounded-md shadow-sm transition"
+                >
+                  New Quiz
+                </button>
+              </div>
             </div>
           ) : (
             <>
