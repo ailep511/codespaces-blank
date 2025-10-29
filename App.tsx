@@ -137,6 +137,48 @@ const App: React.FC = () => {
     setQuizState("active")
   }, [questions.length, quizState])
 
+  const handleNewQuiz = useCallback(() => {
+    try {
+      const selectedFile = getRandomQuestionFile()
+      console.log("[v0] Loading new quiz with", selectedFile.length, "questions")
+
+      if (
+        Array.isArray(selectedFile) &&
+        selectedFile.every(
+          (q) =>
+            q &&
+            typeof q.question === "string" &&
+            typeof q.options === "object" &&
+            Object.keys(q.options).length > 0 &&
+            typeof q.correctAnswer === "string" &&
+            q.options.hasOwnProperty(q.correctAnswer) &&
+            typeof q.explanation === "string",
+        )
+      ) {
+        const formattedQuestions: QuizQuestionData[] = selectedFile.map((q: any, index: number) => ({
+          id: `file-q-${Date.now()}-${index}`,
+          question: q.question,
+          options: q.options,
+          correctAnswerKey: q.correctAnswer,
+          explanation: q.explanation,
+        }))
+        setQuestions(formattedQuestions)
+        setCurrentQuestionIndex(0)
+        setScore(0)
+        setSelectedOptionKey(null)
+        setIsAnswerSubmitted(false)
+        setQuizState("active")
+        console.log(`[v0] Successfully loaded ${formattedQuestions.length} new questions and started quiz`)
+      } else {
+        console.error("[v0] Invalid data structure in selected questions file")
+        alert("Failed to load new questions. Please try again.")
+      }
+    } catch (error) {
+      console.error("[v0] Failed to load new questions:", error)
+      alert("Failed to load new questions. Please try again.")
+    }
+  }, [setQuestions])
+
   const handleOptionSelect = useCallback(
     (optionKey: string) => {
       if (!isAnswerSubmitted && quizState === "active") {
@@ -161,7 +203,7 @@ const App: React.FC = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1)
     } else {
-      const finalScore = selectedOptionKey === currentQuestionData.correctAnswerKey ? score + 1 : score
+      const finalScore = score
       const percentage = Math.round((finalScore / questions.length) * 100)
       const newResult: QuizResult = {
         date: new Date().toLocaleString(),
@@ -172,7 +214,7 @@ const App: React.FC = () => {
       setQuizResults((prev) => [newResult, ...prev].slice(0, 5))
       setQuizState("completed")
     }
-  }, [quizState, currentQuestionIndex, questions.length, currentQuestionData, score, selectedOptionKey, setQuizResults])
+  }, [quizState, currentQuestionIndex, questions.length, currentQuestionData, score, setQuizResults])
 
   const handlePrevQuestion = useCallback(() => {
     if (quizState === "idle" && currentQuestionIndex > 0) {
@@ -383,10 +425,10 @@ const App: React.FC = () => {
                 {questions.length}
               </p>
               <button
-                onClick={startQuiz}
+                onClick={handleNewQuiz}
                 className="px-6 py-3 text-lg font-medium text-white bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 rounded-md shadow-sm transition"
               >
-                Restart Quiz
+                New Quiz
               </button>
             </div>
           ) : (
