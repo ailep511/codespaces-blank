@@ -214,15 +214,28 @@ const App: React.FC = () => {
   const handleOptionSelect = useCallback(
     (optionKey: string) => {
       if (!isAnswerSubmitted && quizState === "active" && currentQuestionData) {
-        setSelectedOptionKeys((prev) => {
-          if (prev.includes(optionKey)) {
-            // If already selected, deselect it
-            return prev.filter((k) => k !== optionKey)
-          } else {
-            // Add the option to selections
-            return [...prev, optionKey]
-          }
-        })
+        const isMultiChoice = Array.isArray(currentQuestionData.correctAnswerKey)
+
+        if (isMultiChoice) {
+          setSelectedOptionKeys((prev) => {
+            if (prev.includes(optionKey)) {
+              // If already selected, deselect it
+              return prev.filter((k) => k !== optionKey)
+            } else {
+              // If not selected, check if we've reached the max
+              const maxSelections = (currentQuestionData.correctAnswerKey as string[]).length
+              if (prev.length < maxSelections) {
+                // Haven't reached max, just add it
+                return [...prev, optionKey]
+              } else {
+                // At max capacity, remove the first and add the new one
+                return [...prev.slice(1), optionKey]
+              }
+            }
+          })
+        } else {
+          setSelectedOptionKeys([optionKey])
+        }
       }
     },
     [isAnswerSubmitted, quizState, currentQuestionData],
@@ -539,7 +552,7 @@ const App: React.FC = () => {
                   {!isAnswerSubmitted ? (
                     <button
                       onClick={handleSubmitAnswer}
-                      disabled={!currentQuestionData || selectedOptionKeys.length === 0}
+                      disabled={selectedOptionKeys.length === 0}
                       className="w-full sm:w-auto px-6 py-3 text-lg font-medium text-white bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 rounded-md shadow-sm transition disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       Submit Answer
