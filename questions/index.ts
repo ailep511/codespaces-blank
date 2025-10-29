@@ -6,6 +6,7 @@ import questions04 from "./questions_04.json"
 import questions05 from "./questions_05.json"
 import questions06 from "./questions_06.json"
 import questions07 from "./questions_07.json"
+import questions08 from "./questions_08.json"
 
 
 // Export all question files as an array
@@ -17,6 +18,7 @@ export const questionFiles = [
   questions05, 
   questions06,
   questions07,
+  questions08,
 ]
 
 // Function to get a random question file

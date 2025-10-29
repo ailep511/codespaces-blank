@@ -1,0 +1,117 @@
+[
+  {
+    "question": "A development team deploys containerized applications that experience variable load throughout the day. The team wants to optimize costs while maintaining performance during traffic spikes. Which solution best aligns with the Cost Optimization pillar?",
+    "options": {
+      "A": "Run containers on EC2 instances with Reserved Instances for baseline capacity and Spot Instances for burst capacity.",
+      "B": "Deploy all containers on ECS with Fargate using only On-Demand pricing.",
+      "C": "Use EKS with cluster autoscaler on EC2 Reserved Instances sized for peak load.",
+      "D": "Manually scale container counts based on daily schedules without auto-scaling."
+    },
+    "correctAnswer": "A",
+    "explanation": "Combining Reserved Instances for predictable baseline workload with Spot Instances for variable burst traffic maximizes cost savings while ensuring availability. This hybrid approach leverages the discount of RIs and the 90% savings of Spot for fault-tolerant workloads."
+  },
+  {
+    "question": "An e-commerce platform experiences traffic spikes during sales events. To improve system resilience according to the Reliability pillar, which strategies should be implemented? (Select TWO.)",
+    "options": {
+      "A": "Implement circuit breaker patterns to prevent cascading failures across microservices.",
+      "B": "Remove all rate limiting to ensure maximum throughput during peak times.",
+      "C": "Use Amazon SQS as a buffer between order submission and processing systems.",
+      "D": "Store all session state in memory on a single Redis instance without replication.",
+      "E": "Disable monitoring during peak events to reduce system overhead."
+    },
+    "correctAnswer": "[A, C]",
+    "explanation": "Circuit breakers prevent failures in one component from affecting others, and SQS decouples components allowing graceful degradation. Rate limiting actually helps protect systems, and disabling monitoring or using single points of failure reduces reliability."
+  },
+  {
+    "question": "A financial application must meet compliance requirements for encryption key management with full control over key lifecycle and HSM-backed security. Which solution satisfies the Security pillar requirements?",
+    "options": {
+      "A": "AWS KMS with AWS-managed keys (SSE-KMS)",
+      "B": "AWS CloudHSM with customer-controlled HSM cluster",
+      "C": "SSE-S3 with Amazon-managed encryption",
+      "D": "Client-side encryption using keys stored in EC2 instance metadata"
+    },
+    "correctAnswer": "B",
+    "explanation": "AWS CloudHSM provides dedicated HSM instances under customer control, meeting strict compliance requirements for key lifecycle management and hardware-backed security. KMS with AWS-managed keys doesn't provide the level of control required for certain compliance standards."
+  },
+  {
+    "question": "To improve deployment safety and align with Operational Excellence best practices, which combination of practices should a team adopt? (Select TWO.)",
+    "options": {
+      "A": "Implement CI/CD pipelines with automated testing gates before production deployment.",
+      "B": "Store infrastructure configurations in version-controlled repositories as Infrastructure as Code.",
+      "C": "Grant all developers full production access to speed up troubleshooting.",
+      "D": "Disable logging during deployments to improve performance.",
+      "E": "Use shared credentials across all team members for simplicity."
+    },
+    "correctAnswer": "[A, B]",
+    "explanation": "Automated CI/CD with testing gates ensures quality, and IaC enables versioned, auditable infrastructure changes. The other options violate security, observability, and least privilege principles fundamental to operational excellence."
+  },
+  {
+    "question": "A data analytics application processes large datasets from S3 and writes results back to S3. Jobs run intermittently and can be interrupted. What compute option best supports the Performance Efficiency pillar while optimizing costs?",
+    "options": {
+      "A": "AWS Lambda with maximum timeout and memory settings",
+      "B": "EC2 On-Demand instances running continuously",
+      "C": "EC2 Spot Instances with checkpointing and automatic retry logic",
+      "D": "AWS Fargate with provisioned capacity maintained 24/7"
+    },
+    "correctAnswer": "C",
+    "explanation": "Spot Instances offer significant cost savings for interruptible, fault-tolerant workloads. With proper checkpointing, the job can resume after interruptions, making this the most cost-effective and performance-efficient solution for batch processing."
+  },
+  {
+    "question": "A multi-tier application experiences database bottlenecks during read-heavy workloads. To enhance reliability and performance, which architectural improvements should be considered? (Select TWO.)",
+    "options": {
+      "A": "Add Amazon RDS read replicas to distribute read traffic across multiple database instances.",
+      "B": "Increase the size of the primary database instance to handle all read and write operations.",
+      "C": "Implement Amazon ElastiCache to cache frequently accessed data and reduce database load.",
+      "D": "Disable database backups during peak hours to improve performance.",
+      "E": "Store all data in memory on the application servers without database persistence."
+    },
+    "correctAnswer": "[A, C]",
+    "explanation": "Read replicas distribute read load improving both performance and availability, while ElastiCache reduces database queries by caching hot data. Simply scaling up doesn't distribute load, and disabling backups or persistence compromises reliability."
+  },
+  {
+    "question": "An organization wants to minimize the carbon footprint of their cloud workloads. Which practices align with the Sustainability pillar?",
+    "options": {
+      "A": "Use Auto Scaling to match capacity with demand and shutdown non-production environments outside business hours.",
+      "B": "Provision maximum capacity across all regions at all times for instant availability.",
+      "C": "Disable all optimization features to simplify operations.",
+      "D": "Use the oldest generation instances to maximize utilization of existing hardware."
+    },
+    "correctAnswer": "A",
+    "explanation": "Auto Scaling eliminates idle capacity waste, and shutting down unused environments reduces unnecessary power consumption. Graviton instances and right-sizing also help, but over-provisioning or using inefficient hardware increases environmental impact."
+  },
+  {
+    "question": "A company's application in private subnets needs to access multiple AWS services (S3, DynamoDB, and Secrets Manager) without internet exposure. Following Security and Cost Optimization principles, what is the MOST efficient approach? (Select TWO.)",
+    "options": {
+      "A": "Create Gateway VPC endpoints for S3 and DynamoDB (no hourly charge).",
+      "B": "Create Interface VPC endpoints for Secrets Manager with private DNS enabled.",
+      "C": "Route all traffic through a NAT Gateway to reach AWS services.",
+      "D": "Use an Internet Gateway with security group rules to restrict access.",
+      "E": "Deploy proxy servers on EC2 instances to forward requests to AWS services."
+    },
+    "correctAnswer": "[A, B]",
+    "explanation": "Gateway endpoints for S3 and DynamoDB have no hourly charges and avoid NAT costs. Interface endpoints for Secrets Manager provide private access. NAT Gateway incurs data processing and transfer costs, making VPC endpoints more cost-effective and secure."
+  },
+  {
+    "question": "A video streaming service serves content globally and wants to reduce latency while minimizing origin load and data transfer costs. Which architecture best supports Performance Efficiency and Cost Optimization? (Select TWO.)",
+    "options": {
+      "A": "Use Amazon CloudFront with Regional Edge Caches to cache content closer to users.",
+      "B": "Enable S3 Transfer Acceleration for all user downloads.",
+      "C": "Configure CloudFront with appropriate TTL values and compression to reduce origin requests.",
+      "D": "Replicate S3 buckets to all AWS regions and use Route 53 geolocation routing.",
+      "E": "Serve all content directly from EC2 instances in a single region."
+    },
+    "correctAnswer": "[A, C]",
+    "explanation": "CloudFront caches at edge locations reducing latency and origin load, lowering data transfer costs compared to S3 direct access. Proper TTL and compression further optimize performance and costs. Bucket replication incurs storage and transfer costs, while Transfer Acceleration typically increases costs."
+  },
+  {
+    "question": "A team wants to implement safe deployment practices for a critical microservice with the ability to quickly revert problematic releases. Which deployment strategy best aligns with Operational Excellence?",
+    "options": {
+      "A": "Deploy all changes directly to production during maintenance windows without staged rollout.",
+      "B": "Use rolling deployments with health checks and automatic rollback on failures.",
+      "C": "Manually copy files to servers without version control or rollback capability.",
+      "D": "Deploy to all instances simultaneously to ensure consistent versions across the fleet."
+    },
+    "correctAnswer": "B",
+    "explanation": "Rolling deployments with health checks limit blast radius by gradually updating instances, and automatic rollback on failures enables quick recovery. This approach balances deployment speed with safety and observability, core tenets of operational excellence."
+  }
+]

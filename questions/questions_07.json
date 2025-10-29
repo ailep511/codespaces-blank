@@ -5,8 +5,7 @@
       "A": "Standard 3-year Reserved Instances for EC2",
       "B": "Zonal Reserved Instances for EC2 and Fargate",
       "C": "Compute Savings Plans with a 1- or 3-year term",
-      "D": "EC2 Spot Instances for all production traffic",
-      "E": "On-Demand Instances only"
+      "D": "EC2 Spot Instances for all production traffic"
     },
     "correctAnswer": "C",
     "explanation": "Compute Savings Plans offer the greatest flexibility across EC2, Fargate, and Lambda while providing significant savings without tying to a specific instance family or region, matching variable usage patterns."
@@ -29,8 +28,7 @@
       "A": "Use SSE-S3 for all S3 buckets and default EBS encryption",
       "B": "Use AWS KMS customer managed keys (CMKs) with key policies and CloudTrail logging",
       "C": "Use client-side encryption with custom libraries only",
-      "D": "Store keys in EC2 instance user data and rotate via cron",
-      "E": "Enable DSSE-KMS but share keys broadly with all roles"
+      "D": "Store keys in EC2 instance user data and rotate via cron"
     },
     "correctAnswer": "B",
     "explanation": "KMS customer managed keys provide fine-grained IAM/key policies and CloudTrail audit capabilities. Automatic key rotation is available for symmetric encryption KMS keys and can be enabled to rotate annually. This meets centralized management, auditability, and rotation requirements while maintaining least privilege access control."
@@ -53,8 +51,7 @@
       "A": "Increase the DynamoDB table's provisioned write capacity units (WCUs).",
       "B": "Use Amazon ElastiCache to cache API responses and DynamoDB reads.",
       "C": "Switch DynamoDB to on-demand mode only.",
-      "D": "Add more application threads to make requests in parallel without caching.",
-      "E": "Enable DynamoDB Streams to replicate to another table in the same region."
+      "D": "Add more application threads to make requests in parallel without caching."
     },
     "correctAnswer": "B",
     "explanation": "Caching with ElastiCache reduces repeated fetch latency and offloads read load, improving performance and efficiency. Other options do not reduce repeated reads or external API latency."
@@ -89,8 +86,7 @@
       "A": "Route S3 traffic through a NAT gateway in a public subnet.",
       "B": "Create a Gateway VPC endpoint for S3 and update route tables.",
       "C": "Use an internet gateway and restrict with NACLs only.",
-      "D": "Use an S3 access point reachable only from the internet.",
-      "E": "Deploy an S3 proxy on EC2 in a public subnet."
+      "D": "Use an S3 access point reachable only from the internet."
     },
     "correctAnswer": "B",
     "explanation": "A Gateway VPC endpoint provides private connectivity to S3 from private subnets and avoids NAT data processing/egress costs, improving security and cost efficiency."
@@ -113,8 +109,7 @@
       "A": "Deploy in-place to all instances simultaneously to minimize version skew.",
       "B": "Use AWS CodeDeploy blue/green (or canary) with automatic rollback on alarm breaches.",
       "C": "Disable health checks during deployment to avoid false alarms.",
-      "D": "Manually copy binaries to servers and restart services during off-hours.",
-      "E": "Scale to 2x capacity and perform a manual DNS cutover without metrics."
+      "D": "Manually copy binaries to servers and restart services during off-hours."
     },
     "correctAnswer": "B",
     "explanation": "Blue/green or canary deployments with automated health checks and rollback reduce blast radius and enable safe, observable changes with quick recovery."
