@@ -1,0 +1,114 @@
+[
+  {
+    "question": "A financial services company needs to ensure that their application data stored in Amazon S3 is protected against accidental deletion and meets compliance requirements for data retention. The company must be able to recover any deleted objects within 30 days. Which combination of actions should a solutions architect recommend? (Select TWO.)",
+    "options": {
+      "A": "Enable S3 Versioning on the S3 bucket.",
+      "B": "Enable S3 Object Lock in governance mode.",
+      "C": "Configure an S3 Lifecycle policy to transition objects to S3 Glacier after 30 days.",
+      "D": "Enable MFA Delete on the S3 bucket.",
+      "E": "Configure AWS Backup to create daily snapshots of the S3 bucket."
+    },
+    "correctAnswer": "[A, D]",
+    "explanation": "A, D – S3 Versioning preserves every version of every object, allowing recovery of deleted objects. MFA Delete adds an additional layer of security by requiring multi-factor authentication to permanently delete object versions or change the versioning state of the bucket, protecting against accidental deletions."
+  },
+  {
+    "question": "A company is migrating a legacy application to AWS. The application requires a specific IP address that must remain constant even if the underlying EC2 instance fails and needs to be replaced. The application is not suitable for load balancing. What should a solutions architect recommend?",
+    "options": {
+      "A": "Launch the EC2 instance with an Elastic IP address and reassociate it to a new instance if the original instance fails.",
+      "B": "Use an Application Load Balancer with a single target and enable sticky sessions.",
+      "C": "Launch the EC2 instance in an Auto Scaling group with minimum and maximum capacity set to 1.",
+      "D": "Deploy the EC2 instance in a placement group to ensure the instance can be quickly replaced with the same IP address."
+    },
+    "correctAnswer": "A",
+    "explanation": "A – An Elastic IP address is a static IPv4 address that can be quickly remapped to another instance in your account. This allows you to maintain the same IP address even when replacing failed instances, meeting the requirement for a constant IP address."
+  },
+  {
+    "question": "A media company stores video files in Amazon S3 that are accessed frequently for the first 30 days after upload, occasionally for the next 60 days, and rarely after 90 days. The company wants to optimize storage costs while maintaining immediate access when needed. Which S3 storage strategy should a solutions architect recommend?",
+    "options": {
+      "A": "Use S3 Standard for all objects and create a lifecycle policy to delete objects after 90 days.",
+      "B": "Use S3 Intelligent-Tiering for all objects with appropriate lifecycle configurations.",
+      "C": "Create a lifecycle policy to transition objects to S3 Standard-IA after 30 days, then to S3 Glacier after 90 days.",
+      "D": "Use S3 One Zone-IA for all objects to reduce costs while maintaining access."
+    },
+    "correctAnswer": "B",
+    "explanation": "B – S3 Intelligent-Tiering automatically moves objects between access tiers based on changing access patterns without performance impact or operational overhead. It's ideal for data with unknown or changing access patterns, automatically optimizing costs while providing immediate access when needed."
+  },
+  {
+    "question": "A company runs a REST API on Amazon EC2 instances behind an Application Load Balancer. The API experiences unpredictable traffic patterns with sudden spikes. The company wants to ensure the application can scale automatically while minimizing costs during low-traffic periods. Which solution should a solutions architect implement?",
+    "options": {
+      "A": "Configure an Auto Scaling group with target tracking scaling based on CPU utilization.",
+      "B": "Migrate the API to AWS Lambda with Amazon API Gateway handling the requests.",
+      "C": "Configure an Auto Scaling group with scheduled scaling based on historical traffic patterns.",
+      "D": "Increase the size of the EC2 instances to handle the maximum expected load."
+    },
+    "correctAnswer": "B",
+    "explanation": "B – AWS Lambda with API Gateway provides automatic scaling without managing infrastructure, charges only for actual compute time used, and can handle sudden traffic spikes effectively. This serverless architecture eliminates idle capacity costs and provides better cost optimization for unpredictable workloads."
+  },
+  {
+    "question": "A solutions architect is designing a disaster recovery solution for a critical application running on AWS. The company requires a Recovery Time Objective (RTO) of 1 hour and Recovery Point Objective (RPO) of 15 minutes. The application uses Amazon RDS for its database and EC2 instances for compute. Which disaster recovery strategy should be implemented?",
+    "options": {
+      "A": "Use AWS Backup to create daily snapshots and store them in a different region.",
+      "B": "Implement a pilot light approach with RDS read replicas in another region and minimal EC2 capacity that can be scaled up.",
+      "C": "Deploy a full duplicate environment in another region with active-active configuration.",
+      "D": "Configure RDS automated backups and store EC2 AMIs in another region for manual recovery."
+    },
+    "correctAnswer": "B",
+    "explanation": "B – A pilot light approach maintains a minimal version of the environment always running in another region. RDS read replicas provide near real-time data replication (meeting the 15-minute RPO), and minimal EC2 capacity can be quickly scaled to full production capacity within the 1-hour RTO requirement, balancing cost and recovery objectives."
+  },
+  {
+    "question": "A company wants to implement a solution to analyze and respond to security threats in real-time across their AWS environment. The solution must detect unusual API activity, potential compromised instances, and unauthorized access attempts. Which AWS service should a solutions architect recommend?",
+    "options": {
+      "A": "AWS CloudTrail with Amazon CloudWatch Logs for monitoring API calls.",
+      "B": "Amazon GuardDuty to continuously monitor for malicious activity and unauthorized behavior.",
+      "C": "AWS Config to track configuration changes and compliance.",
+      "D": "Amazon Inspector to assess security vulnerabilities in EC2 instances."
+    },
+    "correctAnswer": "B",
+    "explanation": "B – Amazon GuardDuty is a threat detection service that continuously monitors for malicious activity and unauthorized behavior. It analyzes VPC Flow Logs, CloudTrail events, and DNS logs using machine learning to detect threats such as compromised instances, reconnaissance activities, and unusual API activity in real-time."
+  },
+  {
+    "question": "A company has a web application that serves static content from Amazon S3 and dynamic content from Amazon EC2 instances. Users from around the world are experiencing high latency. The company wants to improve performance for global users while reducing load on the origin servers. What should a solutions architect recommend?",
+    "options": {
+      "A": "Create an Amazon CloudFront distribution with the S3 bucket and Application Load Balancer as origins.",
+      "B": "Replicate the S3 bucket to multiple regions and use Route 53 geolocation routing.",
+      "C": "Deploy EC2 instances in multiple regions and use Route 53 latency-based routing.",
+      "D": "Use AWS Global Accelerator to route traffic to the nearest region."
+    },
+    "correctAnswer": "A",
+    "explanation": "A – Amazon CloudFront is a content delivery network (CDN) that caches content at edge locations worldwide, reducing latency for global users. It can serve both static content from S3 and dynamic content from EC2 instances through the Application Load Balancer, providing improved performance and reduced load on origin servers."
+  },
+  {
+    "question": "A healthcare company needs to deploy a HIPAA-compliant application on AWS. The application must ensure that all data at rest and in transit is encrypted, access is logged and monitored, and the infrastructure meets regulatory compliance requirements. Which combination of AWS services should be used? (Select TWO.)",
+    "options": {
+      "A": "Use AWS CloudHSM for encryption key management with full control over encryption keys.",
+      "B": "Enable AWS CloudTrail for logging all API calls and store logs in an encrypted S3 bucket.",
+      "C": "Use AWS Systems Manager Session Manager instead of SSH for EC2 instance access.",
+      "D": "Deploy resources in a dedicated AWS Outposts installation for complete isolation.",
+      "E": "Use AWS Artifact to download AWS compliance reports and manage agreements."
+    },
+    "correctAnswer": "[B, E]",
+    "explanation": "B, E – CloudTrail provides comprehensive logging of all API calls for audit and compliance purposes, which is essential for HIPAA compliance. AWS Artifact provides on-demand access to AWS security and compliance reports and agreements, including the Business Associate Addendum (BAA) required for HIPAA compliance. Together, these services help meet regulatory requirements."
+  },
+  {
+    "question": "A company runs a batch processing job that analyzes large datasets stored in Amazon S3. The job runs on Amazon EC2 instances and typically completes within 4 hours, but can tolerate interruptions and restart from the last checkpoint. The company wants to optimize costs. Which EC2 purchasing option should a solutions architect recommend?",
+    "options": {
+      "A": "On-Demand Instances to ensure the job completes without interruption.",
+      "B": "Reserved Instances with a 1-year term to get the maximum discount.",
+      "C": "Spot Instances with a robust checkpoint and restart mechanism.",
+      "D": "Dedicated Hosts to ensure consistent performance for the batch job."
+    },
+    "correctAnswer": "C",
+    "explanation": "C – Spot Instances offer up to 90% discount compared to On-Demand pricing and are ideal for fault-tolerant, flexible workloads. Since the batch job can tolerate interruptions and restart from checkpoints, Spot Instances provide the most cost-effective solution while meeting the workload requirements."
+  },
+  {
+    "question": "A company is designing a microservices architecture on AWS. Each microservice needs to communicate with others, and the solution must support asynchronous communication, decouple services, and ensure messages are not lost. Which AWS service should a solutions architect recommend for inter-service communication?",
+    "options": {
+      "A": "Amazon API Gateway to create RESTful APIs for synchronous communication.",
+      "B": "Amazon Simple Queue Service (SQS) to enable asynchronous message-based communication.",
+      "C": "AWS App Mesh to manage service-to-service communication.",
+      "D": "Amazon ElastiCache to cache frequently accessed data between services."
+    },
+    "correctAnswer": "B",
+    "explanation": "B – Amazon SQS is a fully managed message queuing service that enables asynchronous communication between distributed systems and microservices. It decouples services, ensures messages are reliably stored until processed, and supports the requirement for message persistence. SQS provides at-least-once delivery and helps build scalable, fault-tolerant microservices architectures."
+  }
+]
