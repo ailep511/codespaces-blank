@@ -2,9 +2,11 @@
 import questions01 from "./questions_01.json"
 import questions02 from "./questions_02.json"
 import questions03 from "./questions_03.json"
+import questions04 from "./questions_04.json"
 
 // Export all question files as an array
-export const questionFiles = [questions01, questions02, questions03]
+// export const questionFiles = [questions01, questions02, questions03, questions04]
+export const questionFiles = [questions04]
 
 // Function to get a random question file
 export function getRandomQuestionFile() {

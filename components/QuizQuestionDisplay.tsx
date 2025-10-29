@@ -6,7 +6,7 @@ import type { QuizQuestionData } from "../types"
 
 interface QuizQuestionDisplayProps {
   questionData: QuizQuestionData | null
-  selectedOptionKey: string | null
+  selectedOptionKeys: string[]
   isAnswerSubmitted: boolean
   onOptionSelect: (optionKey: string) => void
   showExplanation?: boolean
@@ -14,7 +14,7 @@ interface QuizQuestionDisplayProps {
 
 const QuizQuestionDisplay: React.FC<QuizQuestionDisplayProps> = ({
   questionData,
-  selectedOptionKey,
+  selectedOptionKeys,
   isAnswerSubmitted,
   onOptionSelect,
   showExplanation = true,
@@ -29,11 +29,19 @@ const QuizQuestionDisplay: React.FC<QuizQuestionDisplayProps> = ({
 
   const { question, options, correctAnswerKey, explanation } = questionData
 
+  const isMultiChoice = Array.isArray(correctAnswerKey)
+  const correctAnswers = isMultiChoice ? correctAnswerKey : [correctAnswerKey]
+
   return (
     <div className="w-full bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 md:p-8">
       <div className="mb-6">
         <p className="text-xs uppercase tracking-wider text-sky-600 dark:text-sky-400 mb-1 font-semibold">Question</p>
         <p className="text-lg md:text-xl text-slate-800 dark:text-slate-200 whitespace-pre-line">{question}</p>
+        {isMultiChoice && !isAnswerSubmitted && (
+          <p className="text-sm text-amber-600 dark:text-amber-400 mt-2 font-medium">
+            Select {correctAnswers.length} answers
+          </p>
+        )}
       </div>
 
       <div className="space-y-3 mb-6">
@@ -41,8 +49,8 @@ const QuizQuestionDisplay: React.FC<QuizQuestionDisplayProps> = ({
           Options
         </p>
         {Object.entries(options).map(([key, text]) => {
-          const isSelected = selectedOptionKey === key
-          const isCorrect = key === correctAnswerKey
+          const isSelected = selectedOptionKeys.includes(key)
+          const isCorrect = correctAnswers.includes(key)
 
           let buttonClass =
             "w-full text-left p-3 border rounded-lg transition-all duration-150 ease-in-out text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400"
@@ -85,11 +93,19 @@ const QuizQuestionDisplay: React.FC<QuizQuestionDisplayProps> = ({
 
       {isAnswerSubmitted && (
         <div className="mt-4 text-center">
-          {selectedOptionKey === correctAnswerKey ? (
-            <p className="text-xl font-semibold text-emerald-600 dark:text-emerald-400">CORRECT</p>
-          ) : (
-            <p className="text-xl font-semibold text-red-600 dark:text-red-400">INCORRECT</p>
-          )}
+          {(() => {
+            const sortedSelected = [...selectedOptionKeys].sort()
+            const sortedCorrect = [...correctAnswers].sort()
+            const isCorrectAnswer =
+              sortedSelected.length === sortedCorrect.length &&
+              sortedSelected.every((key, index) => key === sortedCorrect[index])
+
+            return isCorrectAnswer ? (
+              <p className="text-xl font-semibold text-emerald-600 dark:text-emerald-400">CORRECT</p>
+            ) : (
+              <p className="text-xl font-semibold text-red-600 dark:text-red-400">INCORRECT</p>
+            )
+          })()}
         </div>
       )}
 
@@ -98,7 +114,7 @@ const QuizQuestionDisplay: React.FC<QuizQuestionDisplayProps> = ({
           <p className="text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1 font-semibold">
             Explanation
           </p>
-          <div className="prose prose-sm prose-slate dark:prose-invert max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-1 prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-strong:font-bold prose-code:text-sky-600 dark:prose-code:text-sky-400 prose-code:bg-slate-100 dark:prose-code:bg-slate-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none">
+          <div className="prose prose-sm prose-slate dark:prose-invert max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-1 prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-strong:font-bold prose-code:text-sky-600 dark:prose-code:text-sky-400 prose-code:bg-slate-100 dark:prose-code:bg-slate-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded">
             <ReactMarkdown>{explanation}</ReactMarkdown>
           </div>
         </div>

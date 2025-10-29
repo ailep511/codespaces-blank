@@ -24,7 +24,7 @@ type QuizResult = {
 const App: React.FC = () => {
   const [questions, setQuestions] = useLocalStorage<QuizQuestionData[]>("quizQuestions", [])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [selectedOptionKey, setSelectedOptionKey] = useState<string | null>(null)
+  const [selectedOptionKeys, setSelectedOptionKeys] = useState<string[]>([])
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
   const [score, setScore] = useState(0)
   const [quizState, setQuizState] = useState<QuizState>("not_started")
@@ -62,18 +62,34 @@ const App: React.FC = () => {
                 typeof q.question === "string" &&
                 typeof q.options === "object" &&
                 Object.keys(q.options).length > 0 &&
-                typeof q.correctAnswer === "string" &&
-                q.options.hasOwnProperty(q.correctAnswer) &&
+                (typeof q.correctAnswer === "string" ||
+                  (Array.isArray(q.correctAnswer) && q.correctAnswer.every((a: any) => typeof a === "string"))) &&
                 typeof q.explanation === "string",
             )
           ) {
-            const formattedQuestions: QuizQuestionData[] = selectedFile.map((q: any, index: number) => ({
-              id: `file-q-${Date.now()}-${index}`,
-              question: q.question,
-              options: q.options,
-              correctAnswerKey: q.correctAnswer,
-              explanation: q.explanation,
-            }))
+            const formattedQuestions: QuizQuestionData[] = selectedFile.map((q: any, index: number) => {
+              let correctAnswerKey: string | string[]
+              if (typeof q.correctAnswer === "string") {
+                if (q.correctAnswer.startsWith("[") && q.correctAnswer.endsWith("]")) {
+                  correctAnswerKey = q.correctAnswer
+                    .slice(1, -1)
+                    .split(",")
+                    .map((s: string) => s.trim())
+                } else {
+                  correctAnswerKey = q.correctAnswer
+                }
+              } else {
+                correctAnswerKey = q.correctAnswer
+              }
+
+              return {
+                id: `file-q-${Date.now()}-${index}`,
+                question: q.question,
+                options: q.options,
+                correctAnswerKey,
+                explanation: q.explanation,
+              }
+            })
             setQuestions(formattedQuestions)
             console.log(`[v0] Successfully loaded ${formattedQuestions.length} questions`)
           } else {
@@ -95,7 +111,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (quizState === "active") {
-      setSelectedOptionKey(null)
+      setSelectedOptionKeys([])
       setIsAnswerSubmitted(false)
     }
   }, [currentQuestionIndex, quizState])
@@ -132,7 +148,7 @@ const App: React.FC = () => {
     }
 
     setScore(0)
-    setSelectedOptionKey(null)
+    setSelectedOptionKeys([])
     setIsAnswerSubmitted(false)
     setQuizState("active")
   }, [questions.length, quizState])
@@ -150,22 +166,38 @@ const App: React.FC = () => {
             typeof q.question === "string" &&
             typeof q.options === "object" &&
             Object.keys(q.options).length > 0 &&
-            typeof q.correctAnswer === "string" &&
-            q.options.hasOwnProperty(q.correctAnswer) &&
+            (typeof q.correctAnswer === "string" ||
+              (Array.isArray(q.correctAnswer) && q.correctAnswer.every((a: any) => typeof a === "string"))) &&
             typeof q.explanation === "string",
         )
       ) {
-        const formattedQuestions: QuizQuestionData[] = selectedFile.map((q: any, index: number) => ({
-          id: `file-q-${Date.now()}-${index}`,
-          question: q.question,
-          options: q.options,
-          correctAnswerKey: q.correctAnswer,
-          explanation: q.explanation,
-        }))
+        const formattedQuestions: QuizQuestionData[] = selectedFile.map((q: any, index: number) => {
+          let correctAnswerKey: string | string[]
+          if (typeof q.correctAnswer === "string") {
+            if (q.correctAnswer.startsWith("[") && q.correctAnswer.endsWith("]")) {
+              correctAnswerKey = q.correctAnswer
+                .slice(1, -1)
+                .split(",")
+                .map((s: string) => s.trim())
+            } else {
+              correctAnswerKey = q.correctAnswer
+            }
+          } else {
+            correctAnswerKey = q.correctAnswer
+          }
+
+          return {
+            id: `file-q-${Date.now()}-${index}`,
+            question: q.question,
+            options: q.options,
+            correctAnswerKey,
+            explanation: q.explanation,
+          }
+        })
         setQuestions(formattedQuestions)
         setCurrentQuestionIndex(0)
         setScore(0)
-        setSelectedOptionKey(null)
+        setSelectedOptionKeys([])
         setIsAnswerSubmitted(false)
         setQuizState("active")
         console.log(`[v0] Successfully loaded ${formattedQuestions.length} new questions and started quiz`)
@@ -181,21 +213,43 @@ const App: React.FC = () => {
 
   const handleOptionSelect = useCallback(
     (optionKey: string) => {
-      if (!isAnswerSubmitted && quizState === "active") {
-        setSelectedOptionKey(optionKey)
+      if (!isAnswerSubmitted && quizState === "active" && currentQuestionData) {
+        const isMultiChoice = Array.isArray(currentQuestionData.correctAnswerKey)
+
+        if (isMultiChoice) {
+          setSelectedOptionKeys((prev) =>
+            prev.includes(optionKey) ? prev.filter((k) => k !== optionKey) : [...prev, optionKey],
+          )
+        } else {
+          setSelectedOptionKeys([optionKey])
+        }
       }
     },
-    [isAnswerSubmitted, quizState],
+    [isAnswerSubmitted, quizState, currentQuestionData],
   )
 
   const handleSubmitAnswer = useCallback(() => {
-    if (!selectedOptionKey || quizState !== "active" || !currentQuestionData) return
+    if (selectedOptionKeys.length === 0 || quizState !== "active" || !currentQuestionData) return
 
     setIsAnswerSubmitted(true)
-    if (selectedOptionKey === currentQuestionData.correctAnswerKey) {
+
+    const correctAnswer = currentQuestionData.correctAnswerKey
+    let isCorrect = false
+
+    if (Array.isArray(correctAnswer)) {
+      const sortedSelected = [...selectedOptionKeys].sort()
+      const sortedCorrect = [...correctAnswer].sort()
+      isCorrect =
+        sortedSelected.length === sortedCorrect.length &&
+        sortedSelected.every((key, index) => key === sortedCorrect[index])
+    } else {
+      isCorrect = selectedOptionKeys.length === 1 && selectedOptionKeys[0] === correctAnswer
+    }
+
+    if (isCorrect) {
       setScore((prevScore) => prevScore + 1)
     }
-  }, [selectedOptionKey, quizState, currentQuestionData])
+  }, [selectedOptionKeys, quizState, currentQuestionData])
 
   const handleNextQuestion = useCallback(() => {
     if (quizState !== "active" || !currentQuestionData) return
@@ -219,7 +273,7 @@ const App: React.FC = () => {
   const handlePrevQuestion = useCallback(() => {
     if (quizState === "idle" && currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prevIndex) => prevIndex - 1)
-      setSelectedOptionKey(null)
+      setSelectedOptionKeys([])
       setIsAnswerSubmitted(false)
     }
   }, [quizState, currentQuestionIndex])
@@ -229,7 +283,7 @@ const App: React.FC = () => {
       const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5)
       setQuestions(shuffledQuestions)
       setCurrentQuestionIndex(0)
-      setSelectedOptionKey(null)
+      setSelectedOptionKeys([])
       setIsAnswerSubmitted(false)
       if (quizState !== "not_started") {
         setQuizState("idle")
@@ -278,7 +332,7 @@ const App: React.FC = () => {
           setCurrentQuestionIndex(Math.max(0, newQuestions.length - 1))
         }
         if (currentQuestionData?.id === id) {
-          setSelectedOptionKey(null)
+          setSelectedOptionKeys([])
           setIsAnswerSubmitted(false)
         }
       } else if (quizState === "idle" || quizState === "not_started") {
@@ -326,7 +380,7 @@ const App: React.FC = () => {
       return
     }
     setCurrentQuestionIndex(index)
-    setSelectedOptionKey(null)
+    setSelectedOptionKeys([])
     setIsAnswerSubmitted(false)
     setQuizState("idle")
   }
@@ -441,7 +495,7 @@ const App: React.FC = () => {
               {(!isFetchingInitialJson || currentQuestionData) && (
                 <QuizQuestionDisplay
                   questionData={currentQuestionData}
-                  selectedOptionKey={selectedOptionKey}
+                  selectedOptionKeys={selectedOptionKeys}
                   isAnswerSubmitted={isAnswerSubmitted}
                   onOptionSelect={handleOptionSelect}
                   showExplanation={quizState === "active" && isAnswerSubmitted}
@@ -452,7 +506,7 @@ const App: React.FC = () => {
                   {!isAnswerSubmitted ? (
                     <button
                       onClick={handleSubmitAnswer}
-                      disabled={!selectedOptionKey}
+                      disabled={selectedOptionKeys.length === 0}
                       className="w-full sm:w-auto px-6 py-3 text-lg font-medium text-white bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 rounded-md shadow-sm transition disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       Submit Answer
@@ -484,7 +538,7 @@ const App: React.FC = () => {
                   onNext={() => {
                     if (currentQuestionIndex < questions.length - 1) {
                       setCurrentQuestionIndex((i) => i + 1)
-                      setSelectedOptionKey(null)
+                      setSelectedOptionKeys([])
                       setIsAnswerSubmitted(false)
                     }
                   }}

@@ -1,0 +1,119 @@
+[
+  {
+    "question": "A company is designing a highly available web application that will be deployed across multiple AWS Regions. The application uses a MySQL database that needs to be replicated across regions with minimal latency for read operations. The solution must support automatic failover and provide strong consistency for write operations in the primary region. Which solution meets these requirements? (Select TWO)",
+    "options": {
+      "A": "Use Amazon Aurora Global Database with a primary cluster in one region and read replicas in other regions.",
+      "B": "Use Amazon RDS with cross-region read replicas and manual failover.",
+      "C": "Configure Aurora Global Database to provide replication lag of less than 1 second for reads.",
+      "D": "Use DynamoDB Global Tables for multi-region replication.",
+      "E": "Implement Amazon RDS Multi-AZ deployment in each region independently."
+    },
+    "correctAnswer": "[A, C]",
+    "explanation": "**Amazon Aurora Global Database** (A) is specifically designed for globally distributed applications, allowing a single database to span multiple AWS regions with a primary region for writes and up to five secondary regions for reads. Aurora Global Database (C) provides replication to secondary regions with typical latency of less than 1 second, enabling low-latency global reads. Option B doesn't provide the performance characteristics needed. Option D uses DynamoDB, not MySQL. Option E doesn't address cross-region replication."
+  },
+  {
+    "question": "A solutions architect is designing a data analytics platform that needs to process large volumes of streaming data in real-time. The platform must capture, transform, and load data into Amazon S3 for analysis. The solution should automatically scale to handle varying data volumes and require minimal operational overhead. Which AWS services should be used? (Select TWO)",
+    "options": {
+      "A": "Amazon Kinesis Data Firehose for data delivery to S3.",
+      "B": "Amazon SQS for buffering streaming data.",
+      "C": "AWS Lambda for data transformation during delivery.",
+      "D": "Amazon EMR for real-time stream processing.",
+      "E": "AWS Glue for ETL operations on streaming data."
+    },
+    "correctAnswer": "[A, C]",
+    "explanation": "**Amazon Kinesis Data Firehose** (A) is the easiest way to reliably load streaming data into data lakes, data stores, and analytics services. It can capture, transform, and deliver streaming data to Amazon S3 with automatic scaling. **AWS Lambda** (C) can be integrated with Kinesis Data Firehose to transform data in real-time before delivery to S3. SQS (B) is not designed for streaming data delivery to S3. EMR (D) requires more operational overhead. AWS Glue (E) is primarily for batch ETL, not real-time streaming transformation in this context."
+  },
+  {
+    "question": "A company runs a critical application on Amazon EC2 instances in a VPC. The application needs to access AWS services like Amazon S3 and DynamoDB without traversing the internet for security and performance reasons. The solution must not require internet gateway or NAT gateway configuration. What should the solutions architect implement? (Select TWO)",
+    "options": {
+      "A": "Create VPC endpoints for S3 (Gateway endpoint).",
+      "B": "Create VPC endpoints for DynamoDB (Gateway endpoint).",
+      "C": "Configure AWS PrivateLink for S3 and DynamoDB access.",
+      "D": "Use a NAT gateway with a route to AWS service endpoints.",
+      "E": "Deploy a proxy server in a public subnet to route traffic."
+    },
+    "correctAnswer": "[A, B]",
+    "explanation": "**VPC Gateway endpoints** for both **S3** (A) and **DynamoDB** (B) allow EC2 instances to access these services privately without requiring an internet gateway or NAT gateway. Gateway endpoints are added as route table entries and provide a secure, private connection. PrivateLink (C) is used for interface endpoints, not for S3 and DynamoDB which use gateway endpoints. Options D and E require NAT gateway or internet connectivity, which contradicts the requirements."
+  },
+  {
+    "question": "An e-commerce company experiences predictable traffic patterns with significant spikes during holiday seasons. The application runs on Amazon EC2 instances and uses Amazon RDS for the database. The company wants to optimize costs while ensuring performance during peak times. Which strategies should be implemented? (Select THREE)",
+    "options": {
+      "A": "Purchase Reserved Instances for the baseline EC2 capacity.",
+      "B": "Use EC2 Auto Scaling with target tracking scaling policies for variable demand.",
+      "C": "Implement Amazon RDS Reserved Instances for the database tier.",
+      "D": "Use only Spot Instances to minimize costs.",
+      "E": "Configure RDS Auto Scaling for read replicas during peak periods."
+    },
+    "correctAnswer": "[A, B, E]",
+    "explanation": "**Reserved Instances** (A) provide significant cost savings (up to 75%) for predictable baseline capacity. **EC2 Auto Scaling** (B) with target tracking allows the application to scale out during traffic spikes and scale in during normal periods, optimizing costs while maintaining performance. **RDS Auto Scaling for read replicas** (E) can automatically add read capacity during peak times to handle increased read traffic. Using only Spot Instances (D) is risky for production workloads as they can be interrupted. RDS Reserved Instances (C) are beneficial but the question asks for THREE answers focusing on handling variable demand, making E more relevant for the spike scenario."
+  },
+  {
+    "question": "A financial services company must ensure that all API calls made within their AWS environment are logged and stored securely for compliance auditing. The logs must be encrypted, tamper-proof, and retained for 7 years. Which solution meets these requirements?",
+    "options": {
+      "A": "Enable AWS CloudTrail with log file encryption using AWS KMS, store logs in S3 with Object Lock in compliance mode, and configure S3 lifecycle policies for 7-year retention.",
+      "B": "Use Amazon CloudWatch Logs with KMS encryption and export to S3 Glacier for long-term storage.",
+      "C": "Enable VPC Flow Logs and store them in an encrypted S3 bucket with versioning enabled.",
+      "D": "Use AWS Config to record all API calls and store configuration snapshots in S3."
+    },
+    "correctAnswer": "A",
+    "explanation": "**AWS CloudTrail** logs all API calls in an AWS account. Enabling log file encryption with AWS KMS ensures data is encrypted at rest. **S3 Object Lock in compliance mode** makes logs tamper-proof by preventing deletion or modification for a specified retention period. S3 lifecycle policies can manage the 7-year retention requirement, and S3 Standard or S3 Glacier can be used based on access patterns. CloudWatch Logs (B) can capture logs but CloudTrail is specifically designed for API call logging. VPC Flow Logs (C) capture network traffic, not API calls. AWS Config (D) records resource configurations, not all API activity."
+  },
+  {
+    "question": "A company is migrating a legacy application to AWS that requires specific Microsoft Windows licenses they already own. The application has variable usage patterns and may not run continuously. Which EC2 purchasing option allows them to use their existing licenses most cost-effectively?",
+    "options": {
+      "A": "On-Demand Instances with License Manager.",
+      "B": "Dedicated Hosts.",
+      "C": "Dedicated Instances.",
+      "D": "Spot Instances with bring-your-own-license (BYOL)."
+    },
+    "correctAnswer": "B",
+    "explanation": "**Dedicated Hosts** provide physical servers dedicated to a single customer's use, allowing customers to use their existing per-socket, per-core, or per-VM software licenses, including Windows Server licenses. This gives visibility and control over how instances are placed on physical servers, which is necessary for license compliance. Dedicated Instances (C) run on hardware dedicated to a single customer but don't provide the same visibility into sockets and cores needed for certain licensing models. License Manager (A) helps track licenses but On-Demand doesn't provide the license flexibility needed. Spot Instances (D) can be interrupted and don't provide the licensing control of Dedicated Hosts."
+  },
+  {
+    "question": "A media company needs to distribute large video files to users globally with low latency and high transfer speeds. The content is stored in an Amazon S3 bucket in the us-east-1 region. Users frequently access the same popular videos. Which solutions should be implemented to optimize content delivery? (Select TWO)",
+    "options": {
+      "A": "Use Amazon CloudFront as a CDN with the S3 bucket as the origin.",
+      "B": "Enable S3 Transfer Acceleration for faster uploads and downloads.",
+      "C": "Configure CloudFront to cache content at edge locations close to users.",
+      "D": "Use S3 Cross-Region Replication to copy content to multiple regions.",
+      "E": "Implement S3 Intelligent-Tiering to optimize storage costs."
+    },
+    "correctAnswer": "[A, C]",
+    "explanation": "**Amazon CloudFront** (A) is a content delivery network (CDN) that distributes content to edge locations worldwide, reducing latency for global users. **Caching content at edge locations** (C) is how CloudFront delivers low-latency access - when users request popular videos, CloudFront serves them from the nearest edge location instead of the origin S3 bucket. S3 Transfer Acceleration (B) is primarily for accelerating uploads, not for content distribution to end users. S3 Cross-Region Replication (D) would work but is more complex and costly than using CloudFront. S3 Intelligent-Tiering (E) addresses storage costs, not content delivery performance."
+  },
+  {
+    "question": "A development team is building a serverless REST API using AWS Lambda and Amazon API Gateway. The API needs to authenticate users and authorize access to specific resources based on user roles. The solution should integrate with the company's existing user directory and require minimal custom code. Which services should be used? (Select TWO)",
+    "options": {
+      "A": "Amazon Cognito User Pools for user authentication.",
+      "B": "AWS IAM policies attached to API Gateway resources for authorization.",
+      "C": "Amazon Cognito Identity Pools for accessing AWS resources.",
+      "D": "API Gateway Lambda authorizers for custom authorization logic.",
+      "E": "AWS Directory Service for user management."
+    },
+    "correctAnswer": "[A, B]",
+    "explanation": "**Amazon Cognito User Pools** (A) provide user authentication with features like sign-up, sign-in, and integration with external identity providers, and can integrate with existing user directories via SAML. **API Gateway with IAM policies** (B) can authorize access to API resources based on user roles and permissions with minimal custom code. Cognito Identity Pools (C) are for granting AWS credentials, not API authorization. Lambda authorizers (D) require custom code which contradicts the requirement. AWS Directory Service (E) is for Microsoft AD but doesn't directly integrate with API Gateway authentication as seamlessly as Cognito."
+  },
+  {
+    "question": "A company's application generates audit logs that must be retained for compliance but are rarely accessed after 90 days. After 90 days, the logs should be stored in the most cost-effective manner while still being retrievable within 12 hours if needed. The logs are currently stored in an S3 bucket. What is the most cost-effective solution?",
+    "options": {
+      "A": "Create an S3 Lifecycle policy to transition objects to S3 Glacier Flexible Retrieval after 90 days.",
+      "B": "Create an S3 Lifecycle policy to transition objects to S3 Standard-IA after 90 days.",
+      "C": "Create an S3 Lifecycle policy to transition objects to S3 Glacier Deep Archive after 90 days.",
+      "D": "Create an S3 Lifecycle policy to transition objects to S3 One Zone-IA after 90 days."
+    },
+    "correctAnswer": "A",
+    "explanation": "**S3 Glacier Flexible Retrieval** (formerly S3 Glacier) provides low-cost storage for archive data that is accessed infrequently. It offers retrieval times from minutes to hours (expedited: 1-5 minutes, standard: 3-5 hours, bulk: 5-12 hours), which meets the 12-hour requirement. It's significantly cheaper than S3 Standard-IA (B) or S3 One Zone-IA (D) for data that's rarely accessed. S3 Glacier Deep Archive (C) is even cheaper but has retrieval times of 12-48 hours (standard) which might not meet the within-12-hours requirement reliably, and it's designed for data accessed less than once a year."
+  },
+  {
+    "question": "A company runs a batch processing application that analyzes large datasets. The application is deployed on Amazon EC2 instances and takes several hours to complete. The company wants to reduce costs and can tolerate interruptions, as the application can checkpoint its progress and resume from where it left off. Which EC2 purchasing options should be considered? (Select TWO)",
+    "options": {
+      "A": "Spot Instances with Spot Fleet for cost optimization.",
+      "B": "On-Demand Instances for guaranteed availability.",
+      "C": "Reserved Instances for long-term commitment.",
+      "D": "Spot Instances with persistent request to automatically restart after interruption.",
+      "E": "Dedicated Hosts for licensing requirements."
+    },
+    "correctAnswer": "[A, D]",
+    "explanation": "**Spot Instances** can provide up to 90% cost savings compared to On-Demand prices and are ideal for fault-tolerant, flexible applications. **Spot Fleet** (A) allows you to request a combination of instance types and automatically provisions capacity based on the lowest price, optimizing costs further. **Persistent Spot requests** (D) automatically resubmit the request after an interruption, which works well since the application can checkpoint and resume. On-Demand (B) and Reserved Instances (C) don't provide the significant cost savings that Spot can offer for interruptible workloads. Dedicated Hosts (E) are not mentioned as a requirement and would increase costs."
+  }
+]
