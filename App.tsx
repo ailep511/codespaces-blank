@@ -217,9 +217,22 @@ const App: React.FC = () => {
         const isMultiChoice = Array.isArray(currentQuestionData.correctAnswerKey)
 
         if (isMultiChoice) {
-          setSelectedOptionKeys((prev) =>
-            prev.includes(optionKey) ? prev.filter((k) => k !== optionKey) : [...prev, optionKey],
-          )
+          setSelectedOptionKeys((prev) => {
+            if (prev.includes(optionKey)) {
+              // If already selected, deselect it
+              return prev.filter((k) => k !== optionKey)
+            } else {
+              // If not selected, check if we've reached the max
+              const maxSelections = (currentQuestionData.correctAnswerKey as string[]).length
+              if (prev.length < maxSelections) {
+                // Haven't reached max, just add it
+                return [...prev, optionKey]
+              } else {
+                // At max capacity, remove the first and add the new one
+                return [...prev.slice(1), optionKey]
+              }
+            }
+          })
         } else {
           setSelectedOptionKeys([optionKey])
         }
