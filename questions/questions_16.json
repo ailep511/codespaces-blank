@@ -1,1 +1,112 @@
-
+[
+  {
+    "question": "A startup is building a real-time IoT platform in factories with unreliable connectivity. Edge devices must run local anomaly detection and keep data within the factory, while headquarters needs real-time visibility. Current AWS IoT Core + cloud ML fails during outages. Which architecture best meets data residency and continuity?",
+    "options": {
+      "A": "Deploy AWS IoT Greengrass with local ML, local storage during outages, and sync to cloud on reconnect.",
+      "B": "Use AWS Wavelength at carrier edge with persistent local storage.",
+      "C": "Run on-premises Lambda with EventBridge integration.",
+      "D": "Deploy AWS Outposts in the factory with local ML serving and managed sync to cloud IoT Core."
+    },
+    "correctAnswer": "A",
+    "explanation": "IoT Greengrass enables local ML inference and offline buffering so data stays on‑prem and syncs once connectivity returns, providing residency and continuity."
+  },
+  {
+    "question": "An enterprise with 150+ AWS accounts needs centralized KMS key management: consistent rotation, cross-account use without sharing keys, and a single audit trail. Their per‑account keys are operationally complex. What solution provides centralized, auditable key management at scale?",
+    "options": {
+      "A": "Create a multi‑region KMS key in a primary account; allow cross‑account use via key policy + role assumption; enable CloudTrail logging and automatic rotation.",
+      "B": "Use AWS Secrets Manager with cross‑account access and manual rotation.",
+      "C": "Deploy AWS CloudHSM in each account with centralized management.",
+      "D": "Create per‑account KMS key grants with separate rotation policies."
+    },
+    "correctAnswer": "A",
+    "explanation": "A central multi‑region KMS key with cross‑account policies centralizes control and auditing (via CloudTrail) and enforces rotation—removing per‑account sprawl."
+  },
+  {
+    "question": "A financial services company ingests 1M+ tx/s requiring sub‑second processing and queryability within 30s. Volumes fluctuate 10–1000 TPS. Manual Kinesis shard management is painful. Which approach provides automatic scaling and meets requirements?",
+    "options": {
+      "A": "Use SQS + auto‑scaling Lambda and RDS.",
+      "B": "Kinesis Data Streams on‑demand; process with Lambda (SQS DLQ); fan‑out to DynamoDB (queries ≤30s) and to S3 via Firehose for compliance.",
+      "C": "Use Redshift for real‑time analytics and queries.",
+      "D": "Use EventBridge with Step Functions for orchestration."
+    },
+    "correctAnswer": "B",
+    "explanation": "Kinesis on‑demand auto‑scales without shard ops; Lambda + DLQ ensures no loss; dual delivery gives fast DynamoDB queries and compliant S3 storage."
+  },
+  {
+    "question": "A company’s multi‑region network has 200+ route entries across VPCs, on‑prem, and SaaS. Manual routing causes errors. They need centralized, policy‑based routing and easier troubleshooting. What’s best?",
+    "options": {
+      "A": "Use VPC peering everywhere with manual routes.",
+      "B": "Use AWS Transit Gateway with cross‑region peering, centralized routing policies, and Transit Gateway Network Manager.",
+      "C": "Use AWS Global Accelerator for routing optimization.",
+      "D": "Run custom EC2 routers per region."
+    },
+    "correctAnswer": "B",
+    "explanation": "Transit Gateway centralizes and scales routing; Network Manager adds global visibility and troubleshooting."
+  },
+  {
+    "question": "A media company has petabyte‑scale S3 archives with mixed access patterns and a 7‑year retention requirement. Costs are $400K/month. They need to lower cost while keeping popular content <100 ms. What strategy fits?",
+    "options": {
+      "A": "Keep all data in S3 Standard.",
+      "B": "Manually transition tiers quarterly.",
+      "C": "Use S3 Intelligent‑Tiering, Object Lock for retention, lifecycle to Glacier at 90 days and Deep Archive at 1 year, and CloudFront caching.",
+      "D": "Use S3 One Zone‑IA for all archived content."
+    },
+    "correctAnswer": "C",
+    "explanation": "Intelligent‑Tiering + lifecycle to Glacier/Deep Archive optimizes storage automatically; CloudFront speeds popular content; Object Lock ensures compliance."
+  },
+  {
+    "question": "EC2 behind an ALB across 3 AZs shows brief timeouts at peak. CPU/mem ~50%, but Aurora connection limit is exhausted. What architectural optimization best resolves this?",
+    "options": {
+      "A": "Scale up the RDS instance.",
+      "B": "Increase EC2 count and enable auto‑scaling.",
+      "C": "Use RDS Proxy to multiplex connections, add ElastiCache for hot data, and configure ALB deregistration delay for graceful draining.",
+      "D": "Add read replicas without pooling."
+    },
+    "correctAnswer": "C",
+    "explanation": "RDS Proxy pools/multiplexes DB connections; caching reduces DB load; ALB drain avoids dropped in‑flight requests during scale events."
+  },
+  {
+    "question": "An app requires cross‑region DR with RPO 5 minutes / RTO 1 hour. Current daily snapshots cost $15K/month and recovery took 65 minutes. What meets RPO/RTO while reducing cost?",
+    "options": {
+      "A": "Hourly snapshots.",
+      "B": "Manual failover procedures.",
+      "C": "IaC with CloudFormation only.",
+      "D": "Aurora Global Database (RPO <1s, RTO <1 min) plus DMS/EBS 5‑min snapshots for app state—~$8K/month."
+    },
+    "correctAnswer": "D",
+    "explanation": "Aurora Global DB delivers near‑zero RPO and minute‑level RTO; frequent app‑state snapshots meet 5‑minute RPO at lower total cost."
+  },
+  {
+    "question": "A data analytics company ingests petabyte‑scale training data from 10k+ sources with inconsistent formats using unreliable EC2 ETL. They want reliable, serverless, governed pipelines with minimal ops. Best choice?",
+    "options": {
+      "A": "Custom Spark on EMR clusters.",
+      "B": "Lambda for all ETL tasks.",
+      "C": "Apache Airflow orchestration.",
+      "D": "AWS Glue ETL with schema discovery, job bookmarks, Glue Workflows; govern with Lake Formation and data quality rules."
+    },
+    "correctAnswer": "D",
+    "explanation": "Glue provides serverless ETL with schema discovery, retries/resume, workflows, and integrates with Lake Formation for governance and quality."
+  },
+  {
+    "question": "A serverless app with 200+ Lambdas lacks retries/observability; SQS events drop, cross‑service failures are hard to trace, and only CW Logs are used. Without changing code, what adds comprehensive observability and error handling?",
+    "options": {
+      "A": "Add manual CloudWatch metrics everywhere.",
+      "B": "Use structured logging only.",
+      "C": "Adopt a third‑party observability tool.",
+      "D": "Enable AWS X‑Ray + ServiceLens, configure Lambda Destinations (DLQ via SQS; successes via EventBridge), and enable Lambda Insights."
+    },
+    "correctAnswer": "D",
+    "explanation": "X‑Ray/ServiceLens map dependencies; Destinations standardize success/failure handling; Lambda Insights centralizes metrics—no code changes required."
+  },
+  {
+    "question": "A corporation must migrate 500+ servers and 100 TB from another cloud with near‑zero downtime over 1 Gbps, plus complex dependencies, and wants automated discovery, replication, and centralized tracking. Which services fit?",
+    "options": {
+      "A": "Manual SSH/SCP data transfer.",
+      "B": "Direct Connect plus manual file copies.",
+      "C": "AWS DataSync for limited file migration only.",
+      "D": "Use ADS for discovery, DMS for database replication, MGN for server migration, coordinated via Migration Hub."
+    },
+    "correctAnswer": "D",
+    "explanation": "ADS maps servers/dependencies; DMS provides continuous DB replication; MGN handles server cutover/testing; Migration Hub tracks the effort centrally."
+  }
+]
