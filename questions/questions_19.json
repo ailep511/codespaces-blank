@@ -1,0 +1,117 @@
+[
+   {
+      "question":"A company operates in a heavily regulated industry requiring network segmentation between production, development, and shared services environments across 30 VPCs in multiple regions. Current VPC peering mesh is becoming unmanageable with 435 peering connections. They need centralized routing control, traffic inspection capabilities, and simplified network management. Inter-VPC traffic must traverse a security appliance for inspection. Which solution provides the best architecture?",
+      "options":{
+         "A":"Implement AWS Transit Gateway with route tables for environment segmentation, integrate third-party security appliance in inspection VPC",
+         "B":"Create VPC peering connections with route table filters and deploy AWS Network Firewall in each VPC for traffic inspection",
+         "C":"Use AWS PrivateLink for service-to-service communication and AWS Firewall Manager for centralized security policy enforcement",
+         "D":"Deploy AWS Direct Connect Gateway with VPN connections to each VPC and route all traffic through on-premises security appliance"
+      },
+      "correctAnswer":"A",
+      "explanation":"Transit Gateway centralizes routing (O(n) instead of O(n²)), supports segmented route tables, and enables an inspection VPC for mandatory traffic inspection—meeting control and simplicity requirements."
+   },
+   {
+      "question":"An online education platform streams live video lectures to 50,000 concurrent students globally. The platform uses EC2 instances with OBS software for encoding and needs to deliver streams with less than 3-second latency. Current solution using RTMP to CloudFront has 15-20 second delays. Students must be able to interact via chat with minimal lag. Storage of recorded lectures is required for 1 year with on-demand playback. Which combination of services provides the lowest latency solution? (Select TWO)",
+      "options":{
+         "A":"Use Amazon IVS (Interactive Video Service) for ultra-low latency streaming with built-in chat functionality and automatic recording to S3",
+         "B":"Implement MediaLive with MediaPackage for encoding and packaging, deliver via CloudFront with Low-Latency HLS",
+         "C":"Deploy Amazon Kinesis Video Streams for ingestion with MediaConvert for transcoding and CloudFront for distribution",
+         "D":"Use AWS Elemental MediaStore as origin for live video with optimized delivery through CloudFront edge locations",
+         "E":"Implement Amazon Chime SDK for real-time video delivery with built-in recording capabilities to S3"
+      },
+      "correctAnswer":"[A, B]",
+      "explanation":"IVS provides sub-3s latency with integrated chat and S3 recording. MediaLive + MediaPackage with LL-HLS via CloudFront also achieves ~3s latency for large-scale live delivery."
+   },
+   {
+      "question":"A financial services company runs a trading application requiring sub-millisecond latency access to a 500GB in-memory dataset that must be shared across 20 EC2 instances. Data is updated every 5 minutes from an external feed and must be immediately available to all instances. Current solution uses ElastiCache Redis but experiences synchronization delays during updates. High availability is critical with automatic failover under 30 seconds. What architecture best meets these requirements?",
+      "options":{
+         "A":"Implement ElastiCache for Redis cluster mode with multi-AZ configuration and read replicas in each AZ",
+         "B":"Deploy ElastiCache for Memcached with auto-discovery and multiple cache nodes distributed across Availability Zones",
+         "C":"Use Amazon MemoryDB for Redis with multi-AZ deployment and strong consistency for reads after writes",
+         "D":"Deploy EC2 instances with instance store volumes and use application-level data replication with EFS for persistence"
+      },
+      "correctAnswer":"C",
+      "explanation":"MemoryDB offers Redis compatibility with strong read-after-write consistency and multi-AZ failover, removing replica lag seen with ElastiCache."
+   },
+   {
+      "question":"A SaaS company provides APIs consumed by 10,000 third-party developers. They need to implement API key management, usage quotas (1000 requests/hour per developer), request throttling, and monetization based on usage tiers (free, professional, enterprise). Current custom-built solution requires significant maintenance. The solution must provide developer portal for API key management and real-time analytics. Which combination provides the most comprehensive solution? (Select TWO)",
+      "options":{
+         "A":"Implement Amazon API Gateway with usage plans and API keys for quota management and throttling",
+         "B":"Deploy AWS AppSync with GraphQL schema and custom resolvers for rate limiting based on subscription tier",
+         "C":"Use AWS Marketplace Metering Service integrated with API Gateway for usage-based billing and monetization",
+         "D":"Implement AWS Cognito with custom authorizers and Lambda functions for quota enforcement",
+         "E":"Deploy Kong API Gateway on ECS Fargate with custom plugin development for all requirements"
+      },
+      "correctAnswer":"[A, C]",
+      "explanation":"API Gateway natively supports API keys, usage plans, throttling, and a developer portal; Marketplace Metering integrates for usage-based billing/monetization."
+   },
+   {
+      "question":"An e-commerce company's inventory management system runs on RDS MySQL with read replicas. During flash sales, the database experiences 10x read load causing replica lag of 5-10 minutes, resulting in customers seeing incorrect inventory counts and overselling products. Write load remains consistent at 1000 TPS. The application must show real-time inventory with strong consistency during high-traffic events. Which solution addresses the root cause?",
+      "options":{
+         "A":"Increase read replica count from 3 to 10 and implement application-level connection pooling with read replica endpoints",
+         "B":"Implement Amazon ElastiCache for Redis with write-through caching strategy and TTL set to 1 second for inventory data",
+         "C":"Migrate to Amazon Aurora MySQL with Aurora Replicas and enable Aurora Parallel Query for read scaling",
+         "D":"Implement ElastiCache for Redis with lazy loading strategy and update cache asynchronously via DynamoDB Streams"
+      },
+      "correctAnswer":"C",
+      "explanation":"Aurora’s shared storage design yields minimal replica lag and Aurora Parallel Query improves read performance—delivering strongly consistent, real-time inventory views."
+   },
+   {
+      "question":"A healthcare provider must share patient data with partner hospitals using APIs while ensuring HIPAA compliance. Data access must be audited, encrypted in transit and at rest, and limited to authorized applications only. Partner hospitals have dynamic IP addresses and use OAuth 2.0 for authentication. The solution must support rate limiting per partner and provide detailed access logs for compliance audits. Which architecture best meets all requirements? (Select TWO)",
+      "options":{
+         "A":"Deploy API Gateway with mutual TLS authentication, Lambda authorizers for OAuth 2.0 validation, and CloudWatch Logs with encryption",
+         "B":"Implement AWS WAF with IP rate-based rules attached to Application Load Balancer and use AWS Secrets Manager for credential rotation",
+         "C":"Use Amazon Cognito User Pools with OAuth 2.0 flows, API Gateway with usage plans per partner, and CloudTrail for audit logging",
+         "D":"Deploy AWS PrivateLink endpoints for each partner with VPC endpoint policies and VPC Flow Logs for monitoring",
+         "E":"Implement AWS App Mesh with mutual TLS between services and centralized logging to CloudWatch Logs Insights"
+      },
+      "correctAnswer":"[A, C]",
+      "explanation":"API Gateway mTLS + Lambda authorizers enforce secure OAuth 2.0 access; Cognito provides OAuth flows; usage plans deliver per-partner rate limits; CloudWatch/CloudTrail supply detailed encrypted audit logs."
+   },
+   {
+      "question":"A data science team runs batch machine learning training jobs that process datasets from 10GB to 1TB in size. Jobs run unpredictably 20-30 times per month, taking 2-12 hours to complete. Current solution uses On-Demand p3.8xlarge instances ($12.24/hour) costing $8,000/month. The team wants to reduce costs by 60% while maintaining the ability to run jobs on-demand without delays. GPU instances must not be interrupted during training. What combination provides maximum cost savings? (Select TWO)",
+      "options":{
+         "A":"Use EC2 Spot Instances with Spot Block for defined duration to prevent interruption during training runs",
+         "B":"Implement Savings Plans with 1-year partial upfront commitment for consistent baseline usage, supplement with On-Demand for peaks",
+         "C":"Use SageMaker Training Jobs with managed Spot Training and automatic checkpointing for fault tolerance",
+         "D":"Purchase Reserved Instances with convertible option for 3-year term to maximize GPU instance savings",
+         "E":"Implement AWS Batch with Spot Fleet integration and automatic retries configured for interrupted jobs"
+      },
+      "correctAnswer":"[C, E]",
+      "explanation":"SageMaker managed Spot Training adds checkpointing to tolerate interruptions and cut costs deeply; AWS Batch with Spot Fleet automates provisioning and retries, maximizing savings while preserving on-demand starts."
+   },
+   {
+      "question":"A global logistics company operates a hybrid cloud with 10 on-premises data centers and AWS. They need to implement centralized secret rotation for database credentials, API keys, and encryption keys across all environments. Current manual rotation process is error-prone and takes 2 weeks per rotation cycle. Secrets must be rotated every 90 days per compliance requirements. Applications in both on-premises and AWS must access secrets with minimal latency. Which solution provides the most operational efficiency?",
+      "options":{
+         "A":"Use AWS Secrets Manager with automatic rotation enabled, deploy Secrets Manager VPC endpoints in AWS and VPN connectivity for on-premises access",
+         "B":"Implement AWS Systems Manager Parameter Store with Lambda rotation functions and AWS PrivateLink for secure on-premises access",
+         "C":"Deploy HashiCorp Vault on EC2 with AWS KMS integration for encryption and custom rotation scripts via Lambda",
+         "D":"Use AWS Secrets Manager with automatic rotation, deploy Secrets Manager cache agents on on-premises servers for local caching"
+      },
+      "correctAnswer":"D",
+      "explanation":"Secrets Manager automates rotation for many secret types; adding local cache agents on-prem provides low-latency access while staying synchronized—minimizing operational overhead."
+   },
+   {
+      "question":"A video surveillance company stores 100TB of video footage daily from 50,000 cameras across multiple locations. Videos must be stored for 30 days for immediate access, then archived for 7 years with retrieval within 24 hours. Current solution uploads directly to S3 Standard over VPN causing bandwidth saturation (1 Gbps connection). Upload failures result in data loss. Which combination of solutions addresses bandwidth and data durability concerns? (Select TWO)",
+      "options":{
+         "A":"Deploy AWS Storage Gateway Volume Gateway in each location with local caching and asynchronous upload to S3",
+         "B":"Implement AWS DataSync agents in each location with scheduled transfers during off-peak hours and automatic retry logic",
+         "C":"Configure S3 Lifecycle policies to transition data to S3 Glacier Flexible Retrieval after 30 days and S3 Glacier Deep Archive after 1 year",
+         "D":"Use AWS Snowball Edge devices for initial upload with incremental sync via AWS Transfer Family",
+         "E":"Deploy AWS Direct Connect with multiple 10 Gbps connections and use S3 Transfer Acceleration for faster uploads"
+      },
+      "correctAnswer":"[B, C]",
+      "explanation":"DataSync agents throttle bandwidth, schedule off-peak transfers, and retry failed uploads to prevent loss. Lifecycle policies move data from S3 Standard to Glacier FR (after 30 days) and Deep Archive (after 1 year) to meet access and retention goals at low cost."
+   },
+   {
+      "question":"A microservices application running on EKS requires service-to-service communication with mutual TLS, distributed tracing, traffic management (canary deployments), and circuit breaking. The team lacks deep expertise in service mesh configuration but needs observability for debugging performance issues. Current implementation using custom sidecars is difficult to maintain across 80 microservices. Which solution provides the best balance of functionality and operational simplicity?",
+      "options":{
+         "A":"Implement Istio service mesh with Envoy proxies, Jaeger for distributed tracing, and Grafana dashboards for observability",
+         "B":"Deploy AWS App Mesh with X-Ray integration for tracing, CloudWatch Container Insights for metrics, and App Mesh Controller for Kubernetes",
+         "C":"Use AWS Cloud Map for service discovery with Application Load Balancers and CloudWatch ServiceLens for distributed tracing",
+         "D":"Implement Linkerd service mesh with automatic mutual TLS, built-in observability dashboard, and progressive delivery via Flagger"
+      },
+      "correctAnswer":"B",
+      "explanation":"App Mesh is managed and integrates tightly with EKS, offering mTLS, traffic shifting, retries/circuit breaking, and native observability via X-Ray and CloudWatch with less operational burden than self-managed meshes."
+   }
+]
