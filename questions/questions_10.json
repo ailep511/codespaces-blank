@@ -1,0 +1,112 @@
+[
+  {
+    "question": "A financial services company is designing a global trading application on AWS. The application requires extremely low latency communication between instances in different AWS Regions (us-east-1 and eu-west-1) for its core trading engine. The application also has a web front-end that serves users globally. Which combination of services provides the best performance for both the trading engine and the web front-end?",
+    "options": {
+      "A": "Use VPC Peering between the Regions for the trading engine and Amazon CloudFront for the web front-end.",
+      "B": "Use AWS Global Accelerator for the trading engine and Amazon CloudFront for the web front-end.",
+      "C": "Use an inter-region VPN connection for the trading engine and AWS Global Accelerator for the web front-end.",
+      "D": "Use AWS Direct Connect to link the two Regions for the trading engine and Amazon S3 Transfer Acceleration for the web front-end."
+    },
+    "correctAnswer": "B",
+    "explanation": "Global Accelerator leverages the AWS global network to route traffic optimally—great for the trading engine—while CloudFront caches and serves web content at edge locations for low-latency user access."
+  },
+  {
+    "question": "A media company is migrating its video-on-demand (VOD) platform to AWS. The platform stores petabytes of video files. The company wants to optimize storage costs. The access pattern is that new videos are accessed frequently for the first 30 days, then access becomes infrequent. However, any video, regardless of age, must be available for streaming with low latency. Which S3 storage class transition policy is the MOST cost-effective?",
+    "options": {
+      "A": "Transition objects from S3 Standard to S3 Standard-IA after 30 days, and then to S3 Glacier Flexible Retrieval after 90 days.",
+      "B": "Transition objects from S3 Standard to S3 Intelligent-Tiering after 30 days.",
+      "C": "Keep all objects in S3 Standard and use Amazon CloudFront to cache content closer to users.",
+      "D": "Transition objects from S3 Standard to S3 One Zone-IA after 30 days, and then to S3 Glacier Deep Archive after 90 days."
+    },
+    "correctAnswer": "B",
+    "explanation": "S3 Intelligent-Tiering automatically moves objects between access tiers based on changing patterns, cutting costs without affecting low-latency access."
+  },
+  {
+    "question": "A healthcare organization is building a patient portal that stores sensitive health information in an Amazon RDS for PostgreSQL database. To comply with regulations, the organization must encrypt all data at rest, including automated backups, read replicas, and snapshots. They also need to control the rotation of the encryption keys and audit their usage. Which solution meets these requirements?",
+    "options": {
+      "A": "Enable encryption on the RDS database using the default AWS-managed KMS key.",
+      "B": "Enable encryption on the RDS database using a customer-managed KMS key (CMK) and enable automatic key rotation.",
+      "C": "Encrypt the data at the application level before writing it to the RDS database.",
+      "D": "Use Amazon RDS Proxy to enforce SSL/TLS connections to the database."
+    },
+    "correctAnswer": "B",
+    "explanation": "A customer-managed KMS key gives full control over key policies, rotation, and auditing, and encrypts the DB, snapshots, replicas, and backups."
+  },
+  {
+    "question": "A retail company runs its e-commerce platform on AWS. The platform uses an Application Load Balancer (ALB) in front of an Auto Scaling group of EC2 instances. During flash sales, the platform experiences sudden, massive spikes in traffic. The company has noticed that the Auto Scaling group is too slow to react, causing performance degradation. How can a solutions architect design the architecture to handle these traffic spikes more effectively?",
+    "options": {
+      "A": "Configure a scheduled scaling policy to increase capacity just before a planned flash sale.",
+      "B": "Use a target tracking scaling policy based on the CPU utilization of the EC2 instances.",
+      "C": "Implement a step scaling policy with a warm-up period for newly launched instances.",
+      "D": "Configure a predictive scaling policy based on historical traffic data from CloudWatch."
+    },
+    "correctAnswer": "D",
+    "explanation": "Predictive scaling analyzes historical demand and launches capacity ahead of expected spikes, outperforming purely reactive policies during flash events."
+  },
+  {
+    "question": "A company has a multi-account AWS environment managed with AWS Organizations. The security team wants to enforce a policy that denies any IAM user or role in any member account from disabling AWS CloudTrail. How can this be achieved centrally?",
+    "options": {
+      "A": "Create an IAM policy with a Deny statement for the cloudtrail:StopLogging action and attach it to all IAM users and roles.",
+      "B": "Create a Service Control Policy (SCP) with a Deny statement for the cloudtrail:StopLogging action and attach it to the organization's root or relevant OUs.",
+      "C": "Configure AWS Config rules to detect when CloudTrail is disabled and trigger an AWS Lambda function to re-enable it.",
+      "D": "Use AWS Security Hub to automatically remediate any accounts where CloudTrail has been disabled."
+    },
+    "correctAnswer": "B",
+    "explanation": "An explicit Deny in an Organizations SCP blocks the action across member accounts—including root—preventing CloudTrail from being disabled."
+  },
+  {
+    "question": "A gaming company is launching a new mobile game with a backend running on AWS. The backend needs to process millions of player scores in real-time and maintain a leaderboard. The service must provide low-latency reads and writes. Which database solution is the MOST appropriate for this use case?",
+    "options": {
+      "A": "Amazon RDS for MySQL with multiple read replicas.",
+      "B": "Amazon DynamoDB with on-demand capacity and a global secondary index on the score.",
+      "C": "Amazon Redshift for real-time analytics and leaderboard queries.",
+      "D": "Amazon ElastiCache for Redis to store the leaderboard in-memory."
+    },
+    "correctAnswer": "D",
+    "explanation": "An in-memory store like Redis delivers ultra-low latency and supports sorted sets—ideal for real-time leaderboards with heavy read/write activity."
+  },
+  {
+    "question": "A company runs a critical application on a fleet of EC2 instances. The instances need to access a shared dataset that is frequently updated. The dataset must be accessible by hundreds of instances simultaneously with high throughput and low latency. The storage solution must be fully managed. What is the MOST suitable storage service?",
+    "options": {
+      "A": "Amazon S3, with instances downloading the data locally.",
+      "B": "Amazon EBS Multi-Attach enabled volumes.",
+      "C": "Amazon EFS in General Purpose performance mode.",
+      "D": "Amazon FSx for Lustre."
+    },
+    "correctAnswer": "D",
+    "explanation": "FSx for Lustre is a fully managed, high-performance file system built for massive parallel access with sub-millisecond latency and very high throughput."
+  },
+  {
+    "question": "A solutions architect is designing a disaster recovery (DR) strategy for a web application hosted in the us-east-1 region. The RTO (Recovery Time Objective) is 15 minutes, and the RPO (Recovery Point Objective) is 1 hour. The application uses an RDS for MySQL database and EC2 instances. Which DR strategy is the MOST cost-effective while meeting the RTO/RPO requirements?",
+    "options": {
+      "A": "A backup and restore strategy, with EBS snapshots and RDS automated backups copied to the DR region.",
+      "B": "A pilot light strategy, with a small version of the application running in the DR region and data replicated via an RDS cross-region read replica.",
+      "C": "A warm standby strategy, with a scaled-down but fully functional version of the application running in the DR region.",
+      "D": "A multi-site active-active strategy, with the application fully deployed and serving traffic from both regions."
+    },
+    "correctAnswer": "B",
+    "explanation": "Pilot light keeps a minimal stack in the DR region and uses cross-region RDS replication; it balances cost with an RTO of minutes and near-hour RPO."
+  },
+  {
+    "question": "An IoT company collects telemetry data from millions of devices. The data is streamed into Amazon Kinesis Data Streams. The company wants to perform real-time analytics on this data to detect anomalies. The analytics logic is complex and will be written in SQL. The solution must be serverless. Which service should be used to process the data from Kinesis?",
+    "options": {
+      "A": "AWS Lambda",
+      "B": "Amazon Kinesis Data Analytics for SQL Applications",
+      "C": "Amazon Kinesis Data Firehose",
+      "D": "Amazon EMR"
+    },
+    "correctAnswer": "B",
+    "explanation": "Kinesis Data Analytics (SQL) lets you run rich SQL over streaming data serverlessly and scales with ingest—ideal for anomaly detection logic."
+  },
+  {
+    "question": "A company's security policy requires that all data stored in Amazon S3 must be encrypted at rest. The company wants to maintain control over the encryption keys but wants to minimize the management overhead. They also need to automatically rotate the keys every year. Which encryption option should be used?",
+    "options": {
+      "A": "Server-Side Encryption with Amazon S3-Managed Keys (SSE-S3).",
+      "B": "Server-Side Encryption with AWS KMS-Managed Keys (SSE-KMS) and a customer-managed key (CMK) with automated rotation.",
+      "C": "Server-Side Encryption with Customer-Provided Keys (SSE-C).",
+      "D": "Client-Side Encryption using the AWS Encryption SDK."
+    },
+    "correctAnswer": "B",
+    "explanation": "SSE-KMS with a customer-managed key gives control over policies and annual rotation while offloading durability and availability to KMS."
+  }
+]
