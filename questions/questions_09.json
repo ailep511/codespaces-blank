@@ -1,0 +1,112 @@
+[
+  {
+    "question": "Una empresa está implementando una nueva aplicación web en AWS. La aplicación requiere una base de datos relacional que sea altamente disponible y tolerante a fallos. ¿Qué servicio de AWS debería utilizarse para cumplir con estos requisitos?",
+    "options": {
+      "A": "Amazon DynamoDB",
+      "B": "Amazon RDS con Multi-AZ",
+      "C": "Amazon S3",
+      "D": "Amazon EC2 con una base de datos autoinstalada"
+    },
+    "correctAnswer": "B",
+    "explanation": "Amazon RDS con Multi-AZ replica la base de datos en otra zona de disponibilidad para proporcionar alta disponibilidad y tolerancia a fallos."
+  },
+  {
+    "question": "Un arquitecto de soluciones necesita diseñar una arquitectura que pueda escalar horizontalmente para manejar picos de tráfico impredecibles. La aplicación no tiene estado (stateless). ¿Qué combinación de servicios de AWS es la más adecuada?",
+    "options": {
+      "A": "Instancias de Amazon EC2 en un grupo de Auto Scaling y un Application Load Balancer",
+      "B": "Instancias de Amazon EC2 con direcciones IP elásticas",
+      "C": "Amazon S3 y Amazon CloudFront",
+      "D": "AWS Lambda y Amazon API Gateway"
+    },
+    "correctAnswer": "A",
+    "explanation": "Auto Scaling ajusta automáticamente el número de instancias EC2 según la demanda y un Application Load Balancer distribuye el tráfico entrante."
+  },
+  {
+    "question": "Una empresa quiere almacenar sus archivos de registro a largo plazo de la forma más rentable posible. Los datos se acceden con muy poca frecuencia, pero deben estar disponibles para su recuperación en un plazo de 12 horas. ¿Qué clase de almacenamiento de Amazon S3 es la más adecuada?",
+    "options": {
+      "A": "S3 Standard",
+      "B": "S3 Intelligent-Tiering",
+      "C": "S3 Glacier Deep Archive",
+      "D": "S3 One Zone-IA"
+    },
+    "correctAnswer": "C",
+    "explanation": "S3 Glacier Deep Archive es la clase de almacenamiento de menor costo para archivo a largo plazo; el tiempo de recuperación estándar es de 12 horas."
+  },
+  {
+    "question": "Se requiere que todo el tráfico entre una VPC y un centro de datos local se realice a través de una conexión privada y dedicada. ¿Qué servicio de AWS se debe utilizar?",
+    "options": {
+      "A": "AWS Direct Connect",
+      "B": "AWS VPN",
+      "C": "VPC Peering",
+      "D": "NAT Gateway"
+    },
+    "correctAnswer": "A",
+    "explanation": "AWS Direct Connect establece una conexión de red privada y dedicada entre el centro de datos y AWS."
+  },
+  {
+    "question": "Un equipo de desarrollo necesita un repositorio de código fuente gestionado y seguro para su proyecto. ¿Qué servicio de AWS deberían utilizar?",
+    "options": {
+      "A": "Amazon S3",
+      "B": "AWS CodeCommit",
+      "C": "Amazon EC2",
+      "D": "AWS CodeDeploy"
+    },
+    "correctAnswer": "B",
+    "explanation": "AWS CodeCommit es un servicio de control de código fuente totalmente gestionado que aloja repositorios de Git privados y seguros."
+  },
+  {
+    "question": "Una aplicación requiere un sistema de archivos compartido y escalable que pueda ser montado por varias instancias de Amazon EC2 simultáneamente. ¿Qué servicio de AWS cumple con este requisito?",
+    "options": {
+      "A": "Amazon EFS",
+      "B": "Amazon EBS",
+      "C": "Amazon S3",
+      "D": "Amazon Instance Store"
+    },
+    "correctAnswer": "A",
+    "explanation": "Amazon EFS proporciona un sistema de archivos elástico y compartido que se puede montar desde múltiples instancias EC2."
+  },
+  {
+    "question": "Para cumplir con las normativas de la industria, una empresa debe asegurarse de que todas las llamadas a la API de AWS en su cuenta estén registradas para su posterior auditoría. ¿Qué servicio de AWS se debe habilitar?",
+    "options": {
+      "A": "Amazon CloudWatch",
+      "B": "AWS CloudTrail",
+      "C": "AWS Config",
+      "D": "Amazon Inspector"
+    },
+    "correctAnswer": "B",
+    "explanation": "AWS CloudTrail registra las llamadas a la API de AWS en una cuenta para auditoría y seguridad."
+  },
+  {
+    "question": "Una aplicación web necesita almacenar en caché los datos de una base de datos para reducir la latencia y la carga en la base de datos. ¿Qué servicio de AWS es el más adecuado para este propósito?",
+    "options": {
+      "A": "Amazon ElastiCache",
+      "B": "Amazon DynamoDB Accelerator (DAX)",
+      "C": "Amazon S3",
+      "D": "Amazon CloudFront"
+    },
+    "correctAnswer": "A",
+    "explanation": "Amazon ElastiCache proporciona caché en memoria administrada (Redis/Memcached) para reducir la latencia de lectura."
+  },
+  {
+    "question": "Una empresa quiere desplegar una aplicación web de alta disponibilidad en dos regiones de AWS. ¿Qué servicio de AWS se puede utilizar para distribuir el tráfico entre las dos regiones?",
+    "options": {
+      "A": "Application Load Balancer",
+      "B": "Network Load Balancer",
+      "C": "Amazon Route 53 con una política de enrutamiento de geolocalización",
+      "D": "Amazon Route 53 con una política de enrutamiento de conmutación por error (failover)"
+    },
+    "correctAnswer": "D",
+    "explanation": "Route 53 con política de conmutación por error permite dirigir el tráfico a una región secundaria si la principal no está disponible."
+  },
+  {
+    "question": "Un arquitecto de soluciones necesita una forma de ejecutar código en respuesta a eventos, como cambios en los datos de un bucket de Amazon S3 o la llegada de mensajes a una cola de Amazon SQS, sin tener que aprovisionar o gestionar servidores. ¿Qué servicio de AWS debería utilizar?",
+    "options": {
+      "A": "Amazon EC2",
+      "B": "AWS Lambda",
+      "C": "Amazon ECS",
+      "D": "AWS Fargate"
+    },
+    "correctAnswer": "B",
+    "explanation": "AWS Lambda ejecuta código en respuesta a eventos sin aprovisionar servidores."
+  }
+]
