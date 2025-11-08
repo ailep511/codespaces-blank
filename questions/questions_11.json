@@ -1,0 +1,112 @@
+[
+  {
+    "question": "A media company needs to store and serve video content to millions of users globally with low latency. They require fast retrieval times and the ability to handle sudden traffic spikes during live events. Which combination best addresses these requirements?",
+    "options": {
+      "A": "Use S3 Standard for storage with CloudFront distribution and Route 53 geolocation routing.",
+      "B": "Use S3 One Zone-IA for cost savings and EC2 instances in each region for caching.",
+      "C": "Use EBS volumes across multiple AZs with a Network Load Balancer.",
+      "D": "Use DynamoDB for storage with global tables and ElastiCache for caching."
+    },
+    "correctAnswer": "A",
+    "explanation": "S3 Standard + CloudFront + Route 53 geolocation provides high availability, global low latency from edge locations, and handles traffic spikes. Other options either reduce availability, misuse storage types, or don't address global content delivery."
+  },
+  {
+    "question": "A financial services application requires a database that supports complex transactions across multiple tables with ACID compliance and sub-millisecond latency. The workload is unpredictable but must maintain high availability across 3 Availability Zones. What is the most cost‑effective solution?",
+    "options": {
+      "A": "Aurora PostgreSQL with Multi-AZ and auto-scaling.",
+      "B": "DynamoDB with global tables and on-demand billing.",
+      "C": "RDS MySQL with Multi-AZ failover and provisioned IOPS.",
+      "D": "Redshift with cross-AZ replication and Spectrum queries."
+    },
+    "correctAnswer": "A",
+    "explanation": "Aurora PostgreSQL offers ACID transactions, very low latency, built-in Multi‑AZ high availability, and autoscaling at lower cost than comparable provisioned RDS setups. DynamoDB/Redshift don’t fit transactional ACID needs; provisioned IOPS MySQL is costlier and less flexible."
+  },
+  {
+    "question": "An e-commerce platform is experiencing slower response times during peak hours. The application runs on EC2 instances and uses RDS for the database. Logs show that CPU utilization on EC2 is ~40% but database connections are maxing out. Which approach best optimizes performance with minimal code changes?",
+    "options": {
+      "A": "Add more EC2 instances and enable Auto Scaling.",
+      "B": "Implement ElastiCache in front of RDS and adjust application timeout settings.",
+      "C": "Switch to DynamoDB to reduce database connection overhead.",
+      "D": "Upgrade EC2 instance types and increase RDS IOPS."
+    },
+    "correctAnswer": "B",
+    "explanation": "ElastiCache (Redis/Memcached) offloads frequent reads to cache, reducing connection pressure on RDS; tuning timeouts prevents stale connections. Other options don’t address the root cause or require major rewrites."
+  },
+  {
+    "question": "A company runs a critical application with strict compliance requirements (PCI-DSS) and needs to maintain data sovereignty. They want to leverage AWS services but cannot store sensitive data in the public AWS cloud. Which architecture is most appropriate?",
+    "options": {
+      "A": "Use AWS Outposts with on-premises EC2 and RDS instances, connected to AWS via AWS Direct Connect.",
+      "B": "Use AWS Local Zones for localized computing near compliance boundaries.",
+      "C": "Implement a hybrid architecture using VPN connections with customer-managed encryption.",
+      "D": "Deploy everything on Amazon EC2 instances with customer-managed HSM for encryption."
+    },
+    "correctAnswer": "A",
+    "explanation": "Outposts extends AWS infrastructure and services into on‑premises data centers, satisfying sovereignty/PCI needs while integrating with AWS. Local Zones/HSM/VPN alone don’t fully meet sovereignty and service requirements."
+  },
+  {
+    "question": "An organization has multiple AWS accounts across different departments. They need a centralized security posture, cost tracking, and governance without losing departmental autonomy. What solution best meets these requirements?",
+    "options": {
+      "A": "Implement AWS Control Tower with an organization root account and SSO for access management.",
+      "B": "Create cross-account roles and aggregate CloudWatch logs to a central account.",
+      "C": "Use AWS Organizations with a delegated administrator account for each service.",
+      "D": "Implement a centralized VPN hub and configure all accounts to route through it."
+    },
+    "correctAnswer": "A",
+    "explanation": "Control Tower + Organizations provides automated account provisioning, guardrails, centralized billing, and SSO—governance at scale with OU autonomy. Other choices are partial solutions."
+  },
+  {
+    "question": "A real-time analytics application ingests data from IoT devices and requires sub-second processing of millions of events per second. The data must be queryable immediately after ingestion and stored for historical analysis. Which architecture is most suitable?",
+    "options": {
+      "A": "Kinesis Data Streams → Lambda → DynamoDB for real-time queries, with daily exports to S3 for archival.",
+      "B": "SQS → Lambda → RDS for immediate querying and eventual export to S3.",
+      "C": "EventBridge → Step Functions → Redshift for optimized analytics.",
+      "D": "Kinesis Firehose → S3 with Athena for immediate querying."
+    },
+    "correctAnswer": "A",
+    "explanation": "Kinesis Data Streams handles very high event rates with low latency; Lambda processes streams serverlessly; DynamoDB gives millisecond queries; S3 is the cheap archive. Other paths add latency or don’t scale for sub‑second analytics."
+  },
+  {
+    "question": "A company is migrating a legacy monolithic application to AWS and wants to avoid large upfront licensing costs while maintaining flexibility. The application requires reliable performance during business hours but can tolerate interruptions after hours. Which instance purchasing option is most appropriate?",
+    "options": {
+      "A": "Reserved Instances for predictable business-hours load and On-Demand for peak traffic spikes.",
+      "B": "Spot Instances for all instances to minimize cost, with On-Demand as fallback.",
+      "C": "On-Demand for reliability during business hours and Spot Instances for after-hours non-critical processing.",
+      "D": "Dedicated Hosts to maintain licensing compliance and reduce costs."
+    },
+    "correctAnswer": "C",
+    "explanation": "Use On‑Demand when reliability is required (business hours) and Spot after hours where interruptions are acceptable—maximizing savings without risking uptime."
+  },
+  {
+    "question": "An organization needs to replicate data from an on-premises Oracle database to AWS for disaster recovery, with RPO of 5 minutes and RTO of 1 hour. The database is 2 TB and network bandwidth is limited to 100 Mbps. What is the most practical initial data transfer approach?",
+    "options": {
+      "A": "Use AWS DMS over the VPN connection with Change Data Capture for ongoing replication.",
+      "B": "Use AWS Snowball to transfer the initial 2 TB dataset, then establish DMS replication over VPN for continuous sync.",
+      "C": "Use AWS DataSync to continuously sync data with automatic retry mechanisms.",
+      "D": "Use direct database links with AWS DMS multi-threaded full load and LOB chunking."
+    },
+    "correctAnswer": "B",
+    "explanation": "Seed the 2 TB full load with Snowball, then use DMS CDC over VPN for near‑real‑time replication—meeting RPO/RTO despite bandwidth limits."
+  },
+  {
+    "question": "A microservices application uses ECS with a Network Load Balancer and requires automatic scaling based on custom application metrics (not just CPU/memory). Services need graceful shutdown to avoid in‑flight request loss. Which combination achieves this most effectively?",
+    "options": {
+      "A": "Application Auto Scaling with custom CloudWatch metrics and container lifecycle hooks in ECS task definitions.",
+      "B": "Target group deregistration delay with ECS daemon tasks for metric collection.",
+      "C": "EC2 Auto Scaling with custom lifecycle hooks and CloudWatch agent monitoring.",
+      "D": "ECS service auto-scaling with target tracking on average response time only."
+    },
+    "correctAnswer": "A",
+    "explanation": "Application Auto Scaling supports custom metrics; ECS lifecycle/stopTimeout enables graceful shutdown so in‑flight requests drain before termination."
+  },
+  {
+    "question": "A global SaaS platform stores customer data in multiple AWS Regions to meet data residency requirements. Headquarters requires a consolidated view of all data for reporting without duplicating storage. Inter‑region network latency is 50–100 ms. What is the most efficient approach?",
+    "options": {
+      "A": "Use S3 cross-region replication to a central bucket and query with Athena.",
+      "B": "Implement a global database with Amazon Aurora and use read replicas across regions for reporting.",
+      "C": "Set up VPN connections between regions and use federated database views.",
+      "D": "Use AWS Glue to extract, transform, and replicate data daily to a central data warehouse."
+    },
+    "correctAnswer": "B",
+    "explanation": "Aurora Global Database provides cross‑region read replicas with low replication lag, enabling local reads for reporting while satisfying residency and avoiding cross‑region query latency."
+  }
+]
