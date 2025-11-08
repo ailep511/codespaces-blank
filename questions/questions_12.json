@@ -1,0 +1,112 @@
+[
+  {
+    "question": "A healthcare organization needs to implement a disaster recovery solution for its critical patient record database. The database is 500GB and stored in a primary AWS region. Requirements include an RPO of 1 hour and RTO of 2 hours. The organization wants to minimize costs while maintaining data protection. Which approach best meets these requirements?",
+    "options": {
+      "A": "Use automated daily snapshots to another region with on-demand RDS read replica promotion during disaster",
+      "B": "Implement automated RDS continuous backups with cross-region backup copying and standby Multi-AZ replica in secondary region",
+      "C": "Use AWS Backup with daily backup schedules and DMS replication to secondary region",
+      "D": "Implement RDS Multi-AZ in primary region only with weekly manual snapshots to S3 in secondary region"
+    },
+    "correctAnswer": "B",
+    "explanation": "Provides ~1 hour RPO via automated continuous backups copied cross‑region and ~2 hour RTO via rapid promotion of a standby Multi‑AZ replica in the secondary region while keeping costs lower than a continuously running full replica."
+  },
+  {
+    "question": "An enterprise application requires end-to-end encryption for sensitive data in transit and at rest, with strict compliance requirements. The organization uses KMS keys for encryption and needs fine-grained access control at the API level. Traffic patterns show that 70% of requests are read-only. Which combination provides the optimal security posture with performance optimization?",
+    "options": {
+      "A": "Use API Gateway with API key validation, KMS encryption for data at rest, and TLS 1.2 for transit encryption",
+      "B": "Implement AWS Secrets Manager for key management, ElastiCache with encryption enabled for read optimization, and CloudFront for DDoS protection",
+      "C": "Use API Gateway with AWS WAF and IAM policies, KMS customer-managed keys, encryption at rest, and CloudFront for read-heavy caching",
+      "D": "Implement VPC endpoint services with KMS encryption, mutual TLS authentication, and AWS Shield Standard for network security"
+    },
+    "correctAnswer": "C",
+    "explanation": "API Gateway + AWS WAF + IAM delivers API‑level access control; CMK‑backed KMS gives fine‑grained key control and auditing; encryption at rest secures data; CloudFront caches the read‑heavy workload while adding DDoS protection."
+  },
+  {
+    "question": "A company has implemented a microservices architecture on ECS with 30 services across multiple environments (dev, staging, production). They need to manage secrets securely, rotate credentials automatically, and maintain audit logs for compliance. Services require different secret values per environment. What is the most efficient approach?",
+    "options": {
+      "A": "Store secrets in DynamoDB encrypted with KMS and implement application-level rotation logic",
+      "B": "Use AWS Secrets Manager with Lambda-based automatic rotation, environment-specific secret tagging, and CloudTrail audit logging",
+      "C": "Store secrets as environment variables in ECS task definitions with Systems Manager Parameter Store encryption",
+      "D": "Implement Vault on EC2 with custom rotation scripts and sync secrets to each ECS service container"
+    },
+    "correctAnswer": "B",
+    "explanation": "Secrets Manager centralizes secrets with built‑in rotation via Lambda, supports per‑environment separation through tags, and integrates with CloudTrail for audit trails—scales cleanly across many services/environments."
+  },
+  {
+    "question": "An organization is establishing a hybrid cloud environment connecting on-premises data centers to AWS. They require consistent security policies across both environments, centralized network management, and the ability to manage thousands of routes. Current on-premises infrastructure uses BGP routing. Which architecture best supports these requirements?",
+    "options": {
+      "A": "AWS Site-to-Site VPN with static routing and AWS Transit Gateway for centralized management",
+      "B": "AWS Direct Connect with static routing to individual VPCs and local route management in each data center",
+      "C": "AWS Transit Gateway with dynamic BGP routing support via virtual private gateway with multiple VPNs/Direct Connect connections",
+      "D": "Multiple AWS Direct Connect connections with VPC peering and centralized route tables in a hub VPC"
+    },
+    "correctAnswer": "C",
+    "explanation": "Transit Gateway scales to thousands of routes and supports dynamic BGP over VPN/Direct Connect via attachments, enabling centralized governance and seamless integration with existing BGP networks."
+  },
+  {
+    "question": "A SaaS company deploys customer-specific VPC environments for each client to meet data isolation requirements. They need to deploy infrastructure components (VPCs, subnets, security groups) consistently across 200+ customer environments while maintaining code maintainability and enabling rapid provisioning. What is the recommended approach?",
+    "options": {
+      "A": "Use CloudFormation templates with nested stacks and cross-stack references for parameter management",
+      "B": "Implement Infrastructure as Code using AWS CDK with TypeScript, allowing code reuse through constructs, and deploy via CloudFormation",
+      "C": "Create Amazon Machine Images (AMIs) with pre-configured resources and launch instances for each customer",
+      "D": "Use Terraform with AWS provider for infrastructure definitions and manual parameter configuration per environment"
+    },
+    "correctAnswer": "B",
+    "explanation": "AWS CDK (TypeScript) enables reusable constructs and synthesizes to CloudFormation for consistent, repeatable deployments—ideal for 200+ near‑identical environments."
+  },
+  {
+    "question": "A data analytics company ingests data from thousands of IoT sensors placed in remote locations with unreliable or intermittent network connectivity. They need to ensure no data loss, support batch uploads when connectivity is available, and enable real-time analytics on ingested data. Which architecture addresses these constraints?",
+    "options": {
+      "A": "IoT Greengrass for local data buffering and intermittent sync to Kinesis Data Streams, with Lambda@Edge for local processing",
+      "B": "Direct MQTT publishing to IoT Core with SQS dead-letter queue, then Lambda to DynamoDB for persistence",
+      "C": "AWS IoT Greengrass for edge processing and local data storage, with batch sync to S3, and IoT Core with Kinesis for real-time ingestion",
+      "D": "API Gateway with lambda throttling to handle intermittent uploads directly to RDS with local client-side buffering"
+    },
+    "correctAnswer": "C",
+    "explanation": "Greengrass buffers and processes data locally, syncing batches to S3 when connectivity returns. Simultaneously, IoT Core→Kinesis supports real‑time analytics when online—covering intermittent links and analytics needs."
+  },
+  {
+    "question": "An organization running a legacy monolithic application on premises wants to migrate to AWS while minimizing code changes and maintaining compatibility with existing monitoring tools. The application uses custom logging and sends metrics to a third-party monitoring platform via syslog. Which approach best meets these requirements?",
+    "options": {
+      "A": "Migrate to EC2 instances and install CloudWatch agent to bridge syslog to CloudWatch Logs",
+      "B": "Implement AWS Application Migration Service (MGN), configure CloudWatch Logs agent with syslog support, and use Kinesis Data Firehose to forward logs to third-party platform",
+      "C": "Use AWS DMS for application migration, deploy FluentD on instances to collect logs and forward to the third-party platform directly",
+      "D": "Migrate application to ECS and use CloudWatch Container Insights with third-party integrations for monitoring"
+    },
+    "correctAnswer": "B",
+    "explanation": "MGN enables lift‑and‑shift with minimal changes; CloudWatch Logs agent ingests syslog/custom logs; Kinesis Data Firehose forwards to the existing monitoring tool—preserving current workflows."
+  },
+  {
+    "question": "A global e-commerce platform experiences significant latency for customers accessing product catalogs from specific geographic regions. The product catalog (5GB) is mostly static with infrequent updates (daily). The company also needs to comply with data residency regulations in certain countries. Which solution provides the best latency optimization with compliance assurance?",
+    "options": {
+      "A": "Deploy DynamoDB Global Tables with read replicas in each required region for sub-100ms latency",
+      "B": "Use S3 with CloudFront multi-region distribution, configure CloudFront origin selection by geography, and store residency-sensitive data in region-specific S3 buckets with CORS enabled",
+      "C": "Implement ElastiCache in each region to cache the product catalog with TTL-based invalidation and Route 53 geolocation routing",
+      "D": "Deploy read-only RDS replicas in each region with Aurora cross-region replication and Route 53 latency routing"
+    },
+    "correctAnswer": "B",
+    "explanation": "S3 + CloudFront caches mostly static catalog at global edges for low latency; geo‑based origin selection satisfies residency by routing to region‑specific buckets; CORS supports cross‑origin reads."
+  },
+  {
+    "question": "A company has developed a serverless application using Lambda, API Gateway, and DynamoDB. During peak load testing, they observed that Lambda functions are invoking successfully but downstream DynamoDB requests are experiencing significant throttling. The DynamoDB table uses on-demand billing. Investigation shows the issue occurs despite on-demand capacity. What is the most likely cause and best resolution?",
+    "options": {
+      "A": "Lambda concurrent execution limit is being reached; increase reserved concurrency and enable Lambda function auto-scaling",
+      "B": "DynamoDB hot partitions are being created due to uneven access patterns; redesign partition key to distribute load evenly across partitions",
+      "C": "API Gateway throttling is limiting requests; increase the throttle settings and enable caching for read operations",
+      "D": "VPC endpoints for DynamoDB are saturated; increase endpoint capacity and add additional NAT gateways"
+    },
+    "correctAnswer": "B",
+    "explanation": "On‑demand tables still throttle when a small set of keys overloads a partition. Redesign the partition key (e.g., add a dispersing prefix or composite key) to spread traffic across many partitions."
+  },
+  {
+    "question": "A financial services company requires immutable object storage for audit logs with legal hold capabilities and automatic deletion after 7 years to comply with regulations. Logs must be stored in multiple geographic regions. The company wants to optimize costs while ensuring data integrity and compliance. What is the recommended architecture?",
+    "options": {
+      "A": "S3 with Object Lock enabled in compliance mode, cross-region replication with same legal hold settings, and S3 Lifecycle policies for deletion after 7 years",
+      "B": "S3 Glacier with vault lock policies for immutability, cross-region replication, and Lambda-based deletion after 7 years",
+      "C": "Use Amazon Macie for compliance monitoring, S3 versioning with MFA delete protection, and cross-account replication for geographic distribution",
+      "D": "Implement S3 with governance mode Object Lock, configure retention periods manually per object, and use S3 Events for archival to Glacier"
+    },
+    "correctAnswer": "A",
+    "explanation": "S3 Object Lock (compliance mode) enforces immutability and legal holds that cannot be overridden; CRR preserves Object Lock; Lifecycle policies automate deletion at 7 years—giving compliant, cost‑efficient retention."
+  }
+]
