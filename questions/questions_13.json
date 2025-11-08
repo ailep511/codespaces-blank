@@ -1,0 +1,112 @@
+[
+  {
+    "question": "A company operates a fleet of EC2 instances running a legacy batch processing application that runs continuously but has highly variable CPU utilization throughout the day. The workload includes a critical 8-hour window each day where processing must complete, and non-critical background tasks outside this window. Current costs are $12,000/month. Which approach reduces costs while meeting SLA requirements?",
+    "options": {
+      "A": "Use Spot Instances for non-critical tasks and On-Demand Reserved Instances for the critical 8-hour window",
+      "B": "Migrate to Lambda with concurrency limits set to handle peak load during critical hours",
+      "C": "Use Compute Savings Plans for predictable critical hours and Spot Instances for background processing",
+      "D": "Switch all instances to Convertible Reserved Instances with 3-year commitment"
+    },
+    "correctAnswer": "A",
+    "explanation": "This hybrid approach uses Reserved capacity for the predictable 8-hour critical window (big savings) and Spot Instances for non-critical background tasks, maximizing cost optimization while meeting the SLA."
+  },
+  {
+    "question": "A multinational financial services company must ensure its application meets disaster recovery requirements: RPO of 15 minutes and RTO of 30 minutes. The primary application runs in us-east-1 and uses RDS Multi-AZ with 2TB of data. They need the most cost-effective approach while maintaining compliance. Which architecture best meets these requirements?",
+    "options": {
+      "A": "Automated RDS snapshots to S3 in us-west-2, with database restore automation via Lambda and SNS notifications",
+      "B": "Use Amazon Aurora with Global Database (read-only secondary in us-west-2), promoting to primary on failover with automated Recovery Plan",
+      "C": "Implement DMS continuous replication to RDS in us-west-2 with CloudWatch alarms triggering Route 53 failover",
+      "D": "Configure RDS automated backups with continuous backup copying to us-west-2 and warm standby instance auto-promotion"
+    },
+    "correctAnswer": "B",
+    "explanation": "Aurora Global Database offers very low cross‑region replication lag and rapid promotion, comfortably meeting RPO/RTO while keeping operations simple."
+  },
+  {
+    "question": "A SaaS platform runs on ECS with Fargate and experiences unpredictable traffic patterns with sudden 5x spikes during marketing campaigns. Current infrastructure uses provisioned capacity that sits idle 80% of the time. The platform requires sub-second latency and 99.99% availability. How should scaling be configured to optimize costs while maintaining availability?",
+    "options": {
+      "A": "Use Cluster Auto Scaling with target tracking on memory utilization (80%) and reserve capacity for baseline load",
+      "B": "Implement Application Auto Scaling with target tracking on CPU/memory metrics and activate Fargate Spot for burst capacity",
+      "C": "Configure step scaling based on ALB request count with CloudWatch alarms and automatic task placement optimization",
+      "D": "Use Service Auto Scaling with target tracking on ALB request count and reserve Fargate instances for 99.99% availability SLA"
+    },
+    "correctAnswer": "B",
+    "explanation": "Dynamic target tracking plus Fargate Spot for bursts cuts idle cost while preserving low latency and availability."
+  },
+  {
+    "question": "An organization is implementing a microservices architecture on EKS with 50+ services. Each service requires different IAM permissions, and developers need the ability to define permissions declaratively alongside service definitions. Current manual IAM policy management is error-prone and slows deployment velocity. What is the recommended approach?",
+    "options": {
+      "A": "Use Kubernetes RBAC (Role-Based Access Control) with native AWS RBAC for granular pod-level permissions",
+      "B": "Implement IAM Roles for Service Accounts (IRSA) with Kubernetes ServiceAccount annotations mapping to specific IAM roles per service",
+      "C": "Create a separate IAM role per service and manually attach policies through CloudFormation before EKS deployment",
+      "D": "Use AWS SSO with group-based permissions and configure it as the identity provider for all EKS API access"
+    },
+    "correctAnswer": "B",
+    "explanation": "IRSA enables per‑service IAM via Kubernetes manifests, removing manual policy steps and improving safety and velocity."
+  },
+  {
+    "question": "A healthcare provider migrating legacy patient records (500GB relational database) to AWS must maintain real-time data consistency between on-premises and AWS during and after migration. Database uses complex stored procedures and triggers. The provider wants to minimize downtime (target: 5 minutes). Which migration approach is most suitable?",
+    "options": {
+      "A": "Use AWS DMS with full load followed by CDC replication, with application cutover coordinated via Route 53 weighted routing",
+      "B": "Implement AWS Application Migration Service with database conversion tools and manual application testing before cutover",
+      "C": "Use AWS Database Migration Service with full load and Change Data Capture (CDC), validating data consistency before application cutover",
+      "D": "Perform manual database export/import using native tools with parallel DMS validation running in background"
+    },
+    "correctAnswer": "C",
+    "explanation": "DMS full load + CDC keeps source and target in sync, enabling validation and a brief cutover that meets the 5‑minute goal."
+  },
+  {
+    "question": "A company collects sensor data from 100,000 IoT devices generating 1M events per second. Current architecture uses DynamoDB but is experiencing throttling despite on-demand billing. Data query patterns show 80% of queries access the last 24 hours of data. Which optimization best resolves throttling while reducing costs?",
+    "options": {
+      "A": "Redesign partition key to include time-based component and implement data tiering (hot data in DynamoDB, historical in S3/Athena)",
+      "B": "Enable DynamoDB auto-scaling with increased provisioned capacity and implement DAX for caching frequently accessed items",
+      "C": "Switch to Redshift for data storage and use DynamoDB only for real-time cache with 24-hour TTL",
+      "D": "Implement EventBridge with Kinesis Data Streams buffering and batch writes to DynamoDB to smooth traffic patterns"
+    },
+    "correctAnswer": "A",
+    "explanation": "Hot partitions are the culprit. Time‑based keys spread load; moving historical data to S3/Athena reduces DynamoDB pressure and cost."
+  },
+  {
+    "question": "An enterprise organization has multiple AWS accounts with resources scattered across regions. They need unified cost tracking, identification of underutilized resources, and enforcement of cost optimization policies across all accounts without manual intervention. What is the most comprehensive solution?",
+    "options": {
+      "A": "Use AWS Cost Explorer with cross-account access and set up CloudWatch alarms for cost anomalies",
+      "B": "Implement AWS Trusted Advisor with organization-wide checks and AWS Compute Optimizer for resource recommendations",
+      "C": "Deploy AWS Cost Anomaly Detection with Organization Policies, Compute Optimizer, and Trusted Advisor recommendations aggregated via Config",
+      "D": "Create automated Lambda functions in each account to analyze CloudTrail logs and identify unused resources"
+    },
+    "correctAnswer": "C",
+    "explanation": "Combines automated anomaly detection, optimization recommendations, and centralized aggregation/enforcement—minimal manual work."
+  },
+  {
+    "question": "A real-time analytics platform requires sub-second query latency on datasets ranging from gigabytes to terabytes. Data is ingested continuously from multiple sources, updated in real-time, and must be queryable immediately. The company has limited data science expertise and wants minimal operational overhead. Which architecture is most appropriate?",
+    "options": {
+      "A": "Use Amazon Redshift with real-time ingestion via Kinesis Data Firehose and materialized views for pre-aggregated queries",
+      "B": "Implement Amazon Neptune for graph analytics with ElastiCache for frequently accessed results and S3 for bulk data",
+      "C": "Deploy Amazon AnalyticDB (if available in region) or use Elasticsearch for real-time indexing with S3 for data lake backup",
+      "D": "Use Amazon Athena with S3 as data lake and Glue for ETL, with Lake Formation for fine-grained access control"
+    },
+    "correctAnswer": "A",
+    "explanation": "Redshift + Firehose enables continuous ingest and very fast queries with materialized views, keeping ops overhead low."
+  },
+  {
+    "question": "A company runs a legacy application on EC2 that requires specific firewall rules based on source IP, destination port, and protocol. Traffic patterns show that 95% of connections are from a known set of 20 source IPs. Network security policies require centralized management and audit logging. Which approach provides the best security posture with operational simplicity?",
+    "options": {
+      "A": "Create multiple security groups with specific ingress/egress rules and manage via CloudFormation for version control",
+      "B": "Use AWS WAF attached to ALB with IP reputation lists and CloudWatch Logs for audit trail",
+      "C": "Implement a Network ACL configuration with rule-based filtering and VPC Flow Logs for centralized monitoring",
+      "D": "Deploy AWS Network Firewall with rule groups for known source IPs, centralized policy management, and automated logging"
+    },
+    "correctAnswer": "D",
+    "explanation": "Network Firewall centralizes rule management and logging and supports the required L3/L4 filtering with less operational burden."
+  },
+  {
+    "question": "A SaaS company's multi-tenant application stores data in DynamoDB with tenant-specific table prefix (tenant-001, tenant-002, etc.). With 10,000+ tenants, this approach creates operational complexity. They need fine-grained billing per tenant, strong data isolation for compliance, and efficient resource utilization. Which data model redesign is most appropriate?",
+    "options": {
+      "A": "Consolidate to single table with tenant-id as partition key (GSI), implement RLS (Row Level Security) at application layer",
+      "B": "Migrate to Aurora PostgreSQL with row-level security policies and separate schemas per tenant for isolation",
+      "C": "Use DynamoDB single table with composite partition key (tenant-id + entity-type) and implement encryption per tenant",
+      "D": "Maintain separate tables per tenant but use DynamoDB streams with Lambda to consolidate billing and compliance logging"
+    },
+    "correctAnswer": "A",
+    "explanation": "A single-table design with tenant-id keys simplifies operations and costs while enabling per-tenant metering and app-level isolation controls."
+  }
+]
