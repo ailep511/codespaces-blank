@@ -1,0 +1,117 @@
+[
+   {
+      "question":"A media streaming company stores video files in S3 with an average size of 2GB per file. The company receives 500,000 requests per day to access these files, with 90% of requests accessing videos uploaded in the last 7 days. Storage costs are currently $45,000/month. The company wants to reduce costs while maintaining low-latency access for frequently accessed content. Which combination of solutions provides the most cost-effective approach? (Select TWO)",
+      "options":{
+         "A":"Enable S3 Intelligent-Tiering for automatic transition between access tiers based on access patterns",
+         "B":"Implement S3 Lifecycle policies to transition objects to S3 Standard-IA after 7 days and S3 Glacier after 30 days",
+         "C":"Configure CloudFront distribution with S3 as origin and enable Origin Shield for additional caching layer",
+         "D":"Use S3 Transfer Acceleration to reduce latency for global users accessing content",
+         "E":"Implement S3 Object Lock with compliance mode to prevent accidental deletion of popular content"
+      },
+      "correctAnswer":"[A, C]",
+      "explanation":"S3 Intelligent-Tiering automatically moves objects between access tiers based on actual access patterns without retrieval fees or operational overhead. Since most requests target recent content, frequently accessed files stay in the frequent-access tier while older content moves to infrequent-access tiers automatically. CloudFront with Origin Shield adds edge and mid-tier caching, reducing S3 GET costs and improving latency."
+   },
+   {
+      "question":"A financial institution runs a compliance application that must retain audit logs for 7 years with immutability guarantees. Logs are written once and rarely accessed after 90 days, but must be retrievable within 12 hours when needed for audits. The current solution stores 500TB of logs in S3 Standard costing $11,500/month. Compliance requires proof of data integrity and prevention of deletion during the retention period. What is the most cost-effective solution meeting all requirements?",
+      "options":{
+         "A":"Migrate to S3 Glacier Deep Archive with S3 Object Lock in governance mode and S3 Inventory for integrity checking",
+         "B":"Use S3 Glacier Flexible Retrieval with Object Lock in compliance mode and enable S3 Object Lock legal hold for all objects",
+         "C":"Implement S3 Glacier Deep Archive with Object Lock in compliance mode and MFA Delete enabled for the bucket",
+         "D":"Store in S3 Standard-IA with Object Lock in compliance mode and use AWS Backup for additional protection"
+      },
+      "correctAnswer":"C",
+      "explanation":"S3 Glacier Deep Archive offers the lowest storage cost while meeting the 12-hour retrieval SLA via bulk retrieval. Object Lock in compliance mode provides immutable retention that cannot be overridden, satisfying compliance. MFA Delete adds extra protection against accidental deletion."
+   },
+   {
+      "question":"An e-commerce platform experiences a traffic pattern where 80% of daily traffic occurs during a 4-hour window (6 PM - 10 PM local time). The application runs on an Auto Scaling group of EC2 instances behind an Application Load Balancer. During peak hours, the application scales from 10 to 100 instances, but users report slow initial response times as instances launch. The application requires 5 minutes to fully warm up after launch. Which combination optimizes performance and cost? (Select TWO)",
+      "options":{
+         "A":"Implement scheduled scaling to launch instances 10 minutes before the expected traffic surge",
+         "B":"Configure target tracking scaling with a lower CPU threshold (40%) to trigger scaling earlier",
+         "C":"Enable ALB connection draining and configure health check grace period to 6 minutes",
+         "D":"Implement step scaling policies with warm pool feature to maintain pre-initialized instances",
+         "E":"Use predictive scaling based on historical traffic patterns with dynamic warm-up behavior"
+      },
+      "correctAnswer":"[A, E]",
+      "explanation":"Scheduled scaling ensures capacity is launched and warmed before the predictable surge. Predictive scaling analyzes historical patterns to scale ahead of demand and factors warm-up time, improving user experience while avoiding over-provisioning."
+   },
+   {
+      "question":"A SaaS company operates a multi-region application in us-east-1 (primary) and eu-west-1 (secondary). The application uses RDS PostgreSQL in each region with 5TB of data. They need active-active configuration for read traffic with automatic failover for writes, RPO of 5 seconds, and RTO of 60 seconds. Database performance requires read replicas in both regions. Which architecture best meets these requirements?",
+      "options":{
+         "A":"Use RDS Multi-AZ in us-east-1 with cross-region read replica in eu-west-1, promote replica manually during failover",
+         "B":"Implement Aurora Global Database with primary in us-east-1 and secondary in eu-west-1, using Route 53 health checks for automatic failover",
+         "C":"Deploy RDS in both regions with DMS bidirectional replication and Application Load Balancers with health checks",
+         "D":"Use Aurora Multi-Master clusters in both regions with conflict resolution and Route 53 geolocation routing"
+      },
+      "correctAnswer":"B",
+      "explanation":"Aurora Global Database provides low-latency cross-region replication with ~1s RPO and about 1-minute failover, supports active-active reads in both regions, and enables automated failover of write capability using health checks."
+   },
+   {
+      "question":"A healthcare provider is building a HIPAA-compliant application to process medical images. Images are uploaded to S3, processed by EC2 instances using GPU for ML inference, with results stored in DynamoDB. Processing takes 2-5 minutes per image. The application must encrypt data at rest and in transit, maintain audit logs of all data access, and ensure images are automatically deleted after 90 days. Current costs are $18,000/month for 10,000 images processed daily. Which combination of services optimizes for compliance and cost? (Select TWO)",
+      "options":{
+         "A":"Use S3 with SSE-KMS encryption, enable S3 Object Lock for 90 days, and configure S3 Access Logging with CloudTrail data events",
+         "B":"Implement Step Functions to orchestrate the workflow with SQS for queuing, replace On-Demand EC2 with Spot Instances for processing",
+         "C":"Store images in EBS with encryption enabled, use AWS Certificate Manager for transit encryption, and CloudWatch Logs for audit trail",
+         "D":"Configure S3 lifecycle policy for 90-day expiration, use VPC endpoints for S3/DynamoDB access, and AWS Config for compliance monitoring",
+         "E":"Use Glacier for long-term storage with vault lock policies and implement Lambda for processing instead of EC2 instances"
+      },
+      "correctAnswer":"[B, D]",
+      "explanation":"Step Functions plus SQS provides orchestrated, auditable workflows and reliable queuing; using Spot Instances for GPU workloads cuts costs substantially. S3 lifecycle policies enforce 90-day deletion automatically; VPC endpoints keep traffic private; AWS Config monitors and enforces compliance."
+   },
+   {
+      "question":"A data analytics team needs to query 10TB of log data stored in S3 using SQL. Queries are ad-hoc and unpredictable, running 2-3 times per week with varying complexity. The team has tried Athena but finds query performance insufficient for large scans (queries taking 10+ minutes). They need sub-minute query performance on cold data without managing infrastructure. Which solution best meets these requirements?",
+      "options":{
+         "A":"Load data into Redshift Spectrum with automatic table optimization and concurrency scaling enabled",
+         "B":"Use Athena with partitioned data, columnar format (Parquet), and result caching with workgroup query result reuse",
+         "C":"Implement EMR cluster with Presto/Trino, auto-terminating after job completion with S3 as data source",
+         "D":"Deploy Redshift Serverless with S3 integration, automatic scaling, and regularly scheduled VACUUM operations"
+      },
+      "correctAnswer":"B",
+      "explanation":"Optimizing Athena by converting to columnar formats (e.g., Parquet) and adding proper partitions drastically reduces scanned data. Result caching and workgroup reuse avoid rerunning identical queries, typically bringing 10+ minute queries to sub-minute without managing clusters."
+   },
+   {
+      "question":"A mobile gaming company runs game servers on EC2 instances across multiple Availability Zones. Players connect via UDP protocol on port 7777, requiring sub-50ms latency and high availability. Current architecture uses Network Load Balancer, but players report intermittent disconnections during scaling events. Game sessions must not be interrupted when instances are replaced. Which combination provides the best solution? (Select TWO)",
+      "options":{
+         "A":"Enable connection draining on NLB with appropriate timeout matching average game session length",
+         "B":"Implement AWS Global Accelerator with health checks and static anycast IP addresses for stable connections",
+         "C":"Configure target deregistration delay on target groups to allow existing connections to complete gracefully",
+         "D":"Use Application Load Balancer with WebSocket support and sticky sessions enabled",
+         "E":"Deploy Route 53 with latency-based routing to direct players to closest healthy endpoint"
+      },
+      "correctAnswer":"[B, C]",
+      "explanation":"Global Accelerator provides stable anycast IPs and health-based routing that avoids DNS-related disconnects during scaling. Target deregistration delay lets existing UDP sessions finish before instance removal, preventing mid-game drops."
+   },
+   {
+      "question":"An organization with 50 AWS accounts in AWS Organizations needs to implement centralized security controls. Requirements include: prevent public S3 bucket access, enforce encryption at rest for all new EBS volumes, detect security group rules allowing unrestricted SSH access, and automatically remediate non-compliant resources. IT security team needs unified dashboard for compliance status. What is the most comprehensive solution?",
+      "options":{
+         "A":"Use AWS Config with conformance packs across all accounts, enable AWS Security Hub for aggregated findings, implement Config remediation actions",
+         "B":"Deploy AWS Control Tower with account factory, enable CloudTrail organization trail, use AWS Systems Manager for remediation",
+         "C":"Implement Service Control Policies in Organizations, use CloudWatch Events with Lambda for detection and automatic remediation",
+         "D":"Enable GuardDuty in all accounts with delegated administrator, use AWS Firewall Manager for centralized security policy management"
+      },
+      "correctAnswer":"A",
+      "explanation":"AWS Config conformance packs provide prebuilt multi-account checks (S3 public access, EBS encryption, SSH rules). Security Hub aggregates findings into a single dashboard. Config remediation (via SSM Automation) auto-fixes drift, delivering both visibility and enforcement."
+   },
+   {
+      "question":"A company migrates its on-premises file server (100TB of data) to AWS. The solution must support SMB protocol for Windows clients, integrate with Active Directory for authentication, provide automated backups, and support point-in-time recovery. Users need access to files with under 10ms latency. On-premises users (200 employees) should access files seamlessly during and after migration. Which solution best meets these requirements?",
+      "options":{
+         "A":"Deploy Amazon FSx for Windows File Server with Multi-AZ deployment, configure AWS DataSync for initial migration, and use AWS Backup for automated backups",
+         "B":"Use Amazon EFS with SMB support, implement AWS Transfer Family for migration, and configure AWS Backup with lifecycle policies",
+         "C":"Implement AWS Storage Gateway in File Gateway mode with S3 backend, use AWS DataSync for migration, enable S3 Versioning",
+         "D":"Deploy FSx for Lustre with S3 integration for high-performance access and AWS DataSync for continuous synchronization"
+      },
+      "correctAnswer":"A",
+      "explanation":"FSx for Windows File Server natively supports SMB and AD, offers sub-10ms latency with SSDs, and Multi-AZ for HA. DataSync handles large-scale migration with verification. AWS Backup provides automated, policy-based backups with point-in-time recovery."
+   },
+   {
+      "question":"A social media analytics platform ingests clickstream data from 1 million users generating 50,000 events per second. Data must be processed in real-time to detect trending topics within 10 seconds and stored for batch analytics. Current architecture experiences data loss during traffic spikes and has difficulty scaling processing layer. Which architecture provides the most resilient and scalable solution? (Select TWO)",
+      "options":{
+         "A":"Use Amazon Kinesis Data Streams with enhanced fan-out for real-time processing, Amazon Kinesis Data Firehose for S3 delivery",
+         "B":"Implement Amazon MSK (Managed Streaming for Apache Kafka) with auto-scaling enabled and multiple consumer groups",
+         "C":"Deploy Lambda functions as stream consumers with reserved concurrency and DLQ for failed records",
+         "D":"Use SQS FIFO queues with message deduplication and batch processing via EC2 Auto Scaling group",
+         "E":"Implement EventBridge with archive and replay capability for handling traffic spikes and guaranteed delivery"
+      },
+      "correctAnswer":"[A, C]",
+      "explanation":"Kinesis Data Streams provides durable, scalable ingestion; enhanced fan-out gives each consumer dedicated throughput. Lambda consumers with reserved concurrency scale rapidly and DLQs capture failures. Firehose reliably batches and lands data in S3 for batch analytics."
+   }
+]
