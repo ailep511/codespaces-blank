@@ -1,1 +1,113 @@
 
+[
+  {
+    "question": "A company maintains a hybrid cloud environment with on-premises data center connected to AWS via AWS Direct Connect. They need to extend their on-premises storage infrastructure to AWS for disaster recovery, maintaining existing backup protocols and tools. Current backup software uses iSCSI and NFS protocols to backup 500GB daily. They require synchronous replication to ensure RPO of 0, but on-premises systems cannot tolerate latency increase. Which approach meets these requirements?",
+    "options": {
+      "A": "Use AWS Storage Gateway in cached volume mode with synchronous replication to S3, configured as iSCSI target that presents as local storage, enabling existing backup tools to operate without modification",
+      "B": "Migrate to AWS Backup service with application-aware backup policies and enable cross-region replication for disaster recovery",
+      "C": "Implement AWS DataSync for daily synchronization of backup files with scheduled snapshots to Glacier for archival",
+      "D": "Deploy AWS Direct Connect Gateway with on-premises NAS replication to EBS volumes through VPN tunnels"
+    },
+    "correctAnswer": "A",
+    "explanation": "AWS Storage Gateway (cached volume mode) presents iSCSI volumes locally for low-latency access while synchronously replicating data to S3, preserving existing backup workflows and achieving an RPO of 0."
+  },
+  {
+    "question": "A financial services firm runs a critical batch processing application during trading hours (9 AM - 5 PM, weekdays) that processes market data with strict latency requirements. The application is CPU-intensive, requires specific EC2 instance types (compute-optimized), and must complete within guaranteed time windows. On-demand costs are $5,000/month. They need maximum cost optimization while maintaining strict availability guarantees. Which purchasing strategy best achieves this?",
+    "options": {
+      "A": "Purchase Compute Savings Plan for the consistent trading hours baseline with Scheduled Reserved Instances covering the full 8-hour window, providing both cost predictability and 100% availability guarantee",
+      "B": "Use 1-year Regional Reserved Instances with Always-Free tier instances for overflow",
+      "C": "Implement Spot Instance fleets with On-Demand fallback and Reserved Instance for core capacity",
+      "D": "Migrate to AWS Batch for automatic optimization with cost allocation tags"
+    },
+    "correctAnswer": "A",
+    "explanation": "Compute Savings Plans reduce cost for the predictable baseline and Scheduled RIs guarantee capacity during the exact trading window, meeting performance SLAs."
+  },
+  {
+    "question": "A global SaaS company uses Amazon Aurora MySQL for customer data with read replicas across three regions. Query patterns show significant geographical variation: US regions (60% of queries), EU regions (30%), and APAC (10%). Latency analysis reveals EU and APAC users experience 200–300 ms query latency. The company wants to optimize costs while maintaining sub‑100 ms latency for all users. What is the most cost‑effective optimization?",
+    "options": {
+      "A": "Add additional read replicas in EU and APAC regions to distribute load",
+      "B": "Use CloudFront to cache query results and distribute globally",
+      "C": "Implement Aurora Global Database with read‑only secondaries in each region, use Route 53 geolocation routing to direct queries to the nearest region, and configure local caching layers with ElastiCache in underutilized regions",
+      "D": "Upgrade all replicas to larger instance types and increase provisioned IOPS"
+    },
+    "correctAnswer": "C",
+    "explanation": "Aurora Global Database provides low‑lag regional replicas; combined with geolocation routing and local caching, it achieves sub‑100 ms latency more cost‑effectively than scaling up."
+  },
+  {
+    "question": "A company processes structured log data (10 TB daily) from thousands of applications, requiring near real‑time analysis for anomaly detection. Data ingestion varies from 100 Mbps to 5 Gbps. The analytics platform must support complex queries on a 90‑day rolling window of data. They need cost‑effective storage with sub‑5‑minute query latency. On‑premises Splunk approach costs $8,000/month. Which AWS architecture provides optimal cost‑efficiency?",
+    "options": {
+      "A": "Use S3 for storage with Athena for SQL queries and EventBridge for scheduling daily materialized view updates",
+      "B": "Implement Redshift for data warehousing with Kinesis Data Firehose for streaming ingestion",
+      "C": "Deploy Elasticsearch for log indexing with S3 as cold storage tier, using Index Lifecycle Management (ILM) to age data automatically",
+      "D": "Use DynamoDB with on‑demand billing and export logs to Glacier monthly for compliance"
+    },
+    "correctAnswer": "C",
+    "explanation": "Elasticsearch supports fast indexing and search on recent logs and, with ILM and S3 as a cold tier, keeps 90 days queryable at lower cost while meeting latency needs."
+  },
+  {
+    "question": "An enterprise organization has containerized a legacy monolithic application using Docker and wants to deploy it on AWS. The application has stateful components, requires persistent storage shared across containers, and needs automatic scaling based on business metrics (not just CPU/memory). They want minimal operational overhead. Which container orchestration approach is most suitable?",
+    "options": {
+      "A": "Deploy on ECS with EC2 launch type using CloudWatch agent for custom metrics",
+      "B": "Use ECS with Fargate launch type and configure custom metrics for auto‑scaling via Application Auto Scaling",
+      "C": "Implement Amazon ECS on AWS Outposts with persistent storage via FSx for Windows File Server",
+      "D": "Deploy on Amazon EKS with EBS persistence and Karpenter for cost‑optimized auto‑scaling based on Prometheus metrics"
+    },
+    "correctAnswer": "D",
+    "explanation": "EKS supports stateful workloads with EBS, integrates cleanly with Prometheus custom metrics, and Karpenter optimizes scaling and cost with low ops burden."
+  },
+  {
+    "question": "A company's API Gateway endpoints receive traffic predominantly through CloudFront (90%) but also direct API calls (10%). They observe that 80% of API requests are read‑only GET operations with identical parameters. API costs have increased 40% despite similar traffic levels. Investigation shows each request is being processed by Lambda, including redundant database queries. What is the root cause and best resolution?",
+    "options": {
+      "A": "Implement API Gateway caching for GET requests with appropriate TTL and cache key configuration, bypassing backend Lambda for cached responses",
+      "B": "Use CloudFront origin shield for additional caching layer",
+      "C": "Migrate to DynamoDB for faster response times",
+      "D": "Implement an optimized caching strategy using API Gateway cache for identical read requests and Lambda@Edge for request deduplication, reducing backend load and costs significantly"
+    },
+    "correctAnswer": "D",
+    "explanation": "The lack of effective caching causes redundant Lambda invocations. API Gateway cache plus Lambda@Edge deduplication caches and filters identical reads, cutting cost and latency."
+  },
+  {
+    "question": "A healthcare organization processes patient records in batch jobs that require complex multi‑step workflows: data validation → normalization → enrichment → storage → compliance audit → archival. Workflows must support conditional branching, error handling, and human approval steps. Current implementation uses custom EC2‑based orchestration requiring 2 FTE to maintain. They want to reduce operational overhead while improving reliability. Which AWS service best addresses this?",
+    "options": {
+      "A": "Use AWS Lambda with custom orchestration code",
+      "B": "Implement AWS Glue for ETL with Glue Workflows for orchestration",
+      "C": "Deploy Apache Airflow on EC2 for complex workflow management",
+      "D": "Implement AWS Step Functions (State Machines) for workflow orchestration with built‑in error handling, retries, and human approval integration"
+    },
+    "correctAnswer": "D",
+    "explanation": "Step Functions provides serverless orchestration with native branching, retries, and human‑in‑the‑loop patterns, replacing custom EC2 orchestration and reducing ops."
+  },
+  {
+    "question": "A company runs a distributed application across three availability zones with data stored in DynamoDB. Performance analysis shows that 85% of read operations request items that haven't been written in the last 30 days. Recently, they experienced a partial AZ failure causing elevated latency for 15 minutes. Costs are $12,000/month for DynamoDB on‑demand capacity. Which architecture optimization addresses performance, resilience, and cost concerns?",
+    "options": {
+      "A": "Enable DynamoDB Global Tables for multi‑region replication and increase provisioned throughput",
+      "B": "Migrate to Aurora with read replicas across AZs",
+      "C": "Implement DAX (DynamoDB Accelerator) cluster for frequently accessed items and implement ElastiCache for historical data (>30 days old)",
+      "D": "Use DynamoDB Streams to populate DynamoDB Accelerator (DAX) with frequently accessed items, and implement an S3/Athena layer for historical data querying, reducing DynamoDB costs while improving performance"
+    },
+    "correctAnswer": "D",
+    "explanation": "Separate hot vs. cold data: feed hot items to DAX via Streams, and offload historical queries to S3/Athena. This improves resilience and lowers DynamoDB spend."
+  },
+  {
+    "question": "A company has implemented a complex security architecture with multiple VPCs across regions, each with custom security groups and NACLs. They need to audit traffic flows, detect anomalies, enforce consistent security policies across all VPCs, and identify misconfigured security rules that violate corporate policies. Manual auditing across hundreds of security groups is error‑prone and time‑consuming. Which solution provides automated, scalable security policy enforcement?",
+    "options": {
+      "A": "Use VPC Flow Logs with CloudWatch Logs Insights for manual query analysis",
+      "B": "Implement AWS Config with custom rules to track security group configurations",
+      "C": "Deploy AWS Systems Manager Session Manager for direct access auditing",
+      "D": "Implement AWS Security Hub for centralized security compliance monitoring, integrated with AWS Config for automated detection of non‑compliant security group configurations, and AWS Network Firewall for enforced policy compliance across regions"
+    },
+    "correctAnswer": "D",
+    "explanation": "Security Hub centralizes compliance, Config detects and flags drifts, and Network Firewall enforces uniform policies—together delivering scalable, automated governance."
+  },
+  {
+    "question": "A SaaS platform stores customer data across multiple S3 buckets with complex lifecycle policies: Standard (0–30 days) → Standard‑IA (30–90 days) → Glacier (90–365 days) → Deep Archive (>1 year) → Delete (>7 years). Individual customers range from 1 GB to 1 TB. They need to implement fine‑grained retention policies per customer while minimizing storage costs and ensuring compliance. Manual per‑bucket management doesn't scale beyond 500 customers. Which approach enables scalable, automated lifecycle management?",
+    "options": {
+      "A": "Use S3 Batch Operations for bulk lifecycle transitions with Lambda for custom logic",
+      "B": "Implement S3 Intelligent‑Tiering with custom object retention policies per customer using object tags and lifecycle rules",
+      "C": "Use Amazon S3 Storage Lens for visibility, Object Lock for compliance, and S3 Lifecycle policies configured with customer‑specific S3 bucket prefixes and tag‑based transitions",
+      "D": "Consolidate all customer data into a single S3 bucket with Intelligent‑Tiering enabled, implementing fine‑grained retention at the object‑level using S3 Lifecycle rules with customer identifiers in object key structure combined with automatic deletion policy enforcement"
+    },
+    "correctAnswer": "D",
+    "explanation": "A single bucket with Intelligent‑Tiering and tag/key‑based lifecycle rules scales to many customers and enables per‑customer retention without per‑bucket sprawl."
+  }
+]
