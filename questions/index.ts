@@ -11,7 +11,10 @@ import questions09 from "./questions_09.json"
 import questions10 from "./questions_10.json"
 import questions11 from "./questions_11.json"
 import questions12 from "./questions_12.json"
-// import questions13 from "./questions_13.json"
+import questions13 from "./questions_13.json"
+import questions14 from "./questions_14.json"
+import questions15 from "./questions_15.json"
+import questions16 from "./questions_16.json"
 
 
 
@@ -29,6 +32,10 @@ export const questionFiles = [
   questions10,
   questions11,
   questions12,
+  questions13,
+  questions14,
+  questions15,
+  questions16,
 ]
 
 // Function to get a random question file
