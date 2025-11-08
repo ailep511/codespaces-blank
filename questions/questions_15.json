@@ -1,1 +1,113 @@
 
+[
+  {
+    "question": "A company uses Amazon SageMaker for ML training and inference. Their proprietary model must remain private (no shared infrastructure). They need <100 ms latency and high availability, but dedicated infrastructure is too expensive. Which approach best meets these requirements?",
+    "options": {
+      "A": "SageMaker real‑time endpoint using a Single‑Instance, Multi‑Model Endpoint with Auto Scaling based on InvocationCount and access via PrivateLink",
+      "B": "Export the model to Lambda with provisioned concurrency and API Gateway",
+      "C": "SageMaker real‑time inference with cross‑AZ redundancy and CloudFront caching",
+      "D": "Run on EC2 in a VPC with NLB and custom serving"
+    },
+    "correctAnswer": "A",
+    "explanation": "Multi‑Model Endpoints let multiple models share compute while keeping data isolated and scaling on demand to keep latency under 100 ms; PrivateLink provides private access without public exposure."
+  },
+  {
+    "question": "A global organization runs separate AWS accounts per region (US, EU, APAC) and needs centralized billing, consolidated cost visibility, and automated quarterly reports by region, service, and business unit. What provides scalable, automated cost reporting?",
+    "options": {
+      "A": "Use AWS Organizations with consolidated billing, apply Cost Allocation Tags (region/BU), and use Cost Explorer’s Cost Allocation Reports for automated quarterly reports",
+      "B": "Cross‑account billing aggregation with CloudTrail logs to S3 and Athena queries",
+      "C": "Use AWS Budgets multi‑account and export to spreadsheets",
+      "D": "Enable AWS Cost Anomaly Detection with email notifications"
+    },
+    "correctAnswer": "A",
+    "explanation": "Organizations + consolidated billing aggregate spend; cost allocation tags give per‑dimension visibility; Cost Explorer can automatically produce allocation reports without manual consolidation."
+  },
+  {
+    "question": "Industrial IoT sensors send 50,000 events/second globally. Requirements: (1) sub‑second anomaly alerts, (2) immutable compliance archive of all data, (3) batch analysis over 6 months. Current single Kinesis stream is a bottleneck. Which architecture meets all three and optimizes cost?",
+    "options": {
+      "A": "Kinesis Data Streams (sharded) for real‑time, Kinesis Data Firehose to S3 with Object Lock for immutable archival, and Athena for historical analysis",
+      "B": "IoT Greengrass to S3 and Redshift for analytics",
+      "C": "SQS FIFO with Lambda",
+      "D": "EventBridge routing with DynamoDB for real‑time data"
+    },
+    "correctAnswer": "A",
+    "explanation": "Sharded Kinesis handles high throughput for real‑time alerts; Firehose delivers every record to S3 with Object Lock for compliance; Athena provides low‑cost batch analytics on S3 data."
+  },
+  {
+    "question": "A company runs a multi‑AZ PostgreSQL RDS with read replicas across three AZs. A 30‑minute primary upgrade is scheduled. They want to minimize read downtime while keeping writes available; the app can handle failover. What’s the best approach?",
+    "options": {
+      "A": "Use RDS Blue/Green Deployments and perform an immediate cutover",
+      "B": "Promote the read replica in the same AZ as a temporary primary, route reads there during maintenance, upgrade the original primary, then fail back",
+      "C": "Create a new read replica before maintenance and fail all traffic there",
+      "D": "Upgrade during low‑traffic hours with on‑demand read‑replica promotion"
+    },
+    "correctAnswer": "B",
+    "explanation": "Temporarily promoting a replica preserves write capability and keeps reads online during the maintenance, then a managed failback minimizes disruption."
+  },
+  {
+    "question": "A SaaS provider must fully isolate each customer in its own VPC. With 5,000+ customers, manual provisioning is unsustainable. They need automated, repeatable VPC deployments, consistent security posture, centralized logging, and enforced org‑wide policies—minimal ops overhead. Best solution?",
+    "options": {
+      "A": "Use AWS Organizations to create an account per customer and provision VPCs with Terraform",
+      "B": "CloudFormation StackSets to deploy VPC templates across accounts, governed by AWS Control Tower; enforce via SCPs and monitor with AWS Config",
+      "C": "AWS Service Catalog with VPC products and manual policy enforcement",
+      "D": "AWS CDK with manual configuration per customer"
+    },
+    "correctAnswer": "B",
+    "explanation": "StackSets automate consistent multi‑account VPC rollout; Control Tower adds governance; SCPs enforce guardrails and Config monitors compliance—scalable for thousands of accounts."
+  },
+  {
+    "question": "A company streams 100,000 financial transactions/second that must be deduplicated, fraud‑checked in sub‑second, and stored so data is queryable within 2 minutes to meet compliance. Current Kinesis+Lambda+DynamoDB setup misses fraud on spikes. What architecture improves detection and maintains compliance?",
+    "options": {
+      "A": "EventBridge with DynamoDB",
+      "B": "Kinesis Data Streams with on‑demand scaling, fan‑out to Lambda for fraud detection (with DLQs), and Kinesis Data Firehose to S3 + Athena for compliant storage/queries",
+      "C": "Apache Kafka on EC2 with custom deduplication",
+      "D": "SQS with Lambda and concurrency limits"
+    },
+    "correctAnswer": "B",
+    "explanation": "Kinesis on‑demand handles bursty throughput; fan‑out isolates real‑time fraud logic; Firehose → S3 enables within‑minutes queryability via Athena and preserves every event."
+  },
+  {
+    "question": "A company hosts web apps in four regions (US‑East 40%, US‑West 35%, EU 15%, APAC 10%) using Aurora. APAC users see 250+ ms latency. They need <100 ms globally and to optimize cost. Best option?",
+    "options": {
+      "A": "Create a separate Aurora cluster only for APAC",
+      "B": "Switch to DynamoDB Global Tables",
+      "C": "Aurora Global Database with read‑only secondaries in each region, Route 53 weighted routing (40/35/15/10), and RDS Proxy for connection pooling",
+      "D": "Use CloudFront to cache database queries"
+    },
+    "correctAnswer": "C",
+    "explanation": "Aurora Global Database puts replicas close to users for sub‑100 ms reads; weighted routing aligns traffic with regional demand; RDS Proxy cuts connection overhead."
+  },
+  {
+    "question": "A HIPAA‑regulated provider uses KMS for at‑rest encryption and TLS in transit. Auditors need cryptographic proof logs were not tampered with and that key usage is properly controlled. What provides the needed verification without heavy ops?",
+    "options": {
+      "A": "Store KMS logs in DynamoDB with manual audits",
+      "B": "Use AWS Secrets Manager for all keys",
+      "C": "Enable CloudTrail with S3 log file validation, use KMS key rotation and logging, and integrate CloudHSM for dedicated key management with detailed audit trails",
+      "D": "Do manual quarterly key audits"
+    },
+    "correctAnswer": "C",
+    "explanation": "CloudTrail log file validation delivers cryptographic integrity; KMS logging/rotation tracks use; CloudHSM gives dedicated HSM‑backed keys and detailed auditability."
+  },
+  {
+    "question": "A legacy batch needs 8 GPUs for 4 hours nightly (00:00–04:00). On‑Demand GPU EC2 costs ~$8,000/month. Workload tolerates interruptions with restarts. SLA: finish within window. How to minimize cost and meet SLA?",
+    "options": {
+      "A": "Buy 1‑year GPU Reserved Instances",
+      "B": "Keep On‑Demand and add cost alerts",
+      "C": "Run on Fargate with GPU support",
+      "D": "Use AWS Batch with GPU‑optimized Spot Instances, retries, and EventBridge scheduling; monitor with CloudWatch"
+    },
+    "correctAnswer": "D",
+    "explanation": "Batch manages Spot capacity and retries; scheduled runs hit the nightly window; Spot yields ~80% savings while meeting time constraints."
+  },
+  {
+    "question": "A serverless app has 50+ Lambdas triggered by S3, DynamoDB Streams, SQS, and EventBridge. During spikes, downstream throttling causes failures; events are dropped and debugging requires manual log dives. They want reliable error handling and unified observability without changing function code. Best solution?",
+    "options": {
+      "A": "Add try/catch to all 50+ functions",
+      "B": "Use AWS X‑Ray only",
+      "C": "Rely on CloudWatch Log Insights for manual investigation",
+      "D": "Configure Lambda Destinations (SQS/SNS for failures, EventBridge for successes) for all functions, a centralized DLQ with EventBridge‑triggered retries/alerts, and enable Lambda Insights"
+    },
+    "correctAnswer": "D",
+    "explanation": "Destinations add standardized success/failure handling without code changes; a central DLQ ensures no silent drops; Insights unifies metrics and troubleshooting."
+  }
+]
